@@ -1,0 +1,3271 @@
+
+enum PacketFamily : byte
+{
+	 1 Connection
+	 2 Account 
+	 3 Character
+	 4 Login
+	 5 Welcome
+	 6 Walk
+	 7 Face
+	 8 Chair
+	 9 Emote
+	11 Attack
+	12 Spell
+	13 Shop
+	14 Item
+	16 StatSkill
+	17 Global
+	18 Talk
+	19 Warp
+	21 Jukebox
+	22 Players
+	23 Avatar
+	24 Party
+	25 Refresh
+	26 NPC
+	27 Player_AutoRefresh
+	28 NPC_AutoRefresh
+	29 Appear
+	30 Paperdoll
+	31 Effect
+	32 Trade
+	33 Chest
+	34 Door
+	35 Message
+	36 Bank
+	37 Locker
+	38 Barber
+	39 Guild
+	40 Music
+	41 Sit
+	42 Recover
+	43 Board
+	44 Cast
+	45 Arena
+	46 Priest
+	47 Marriage
+	48 AdminInteract
+	49 Citizen
+	50 Quest
+	51 Book
+	255 Init
+}
+
+enum PacketAction : byte
+{
+	 1 Request
+	 2 Accept
+	 3 Reply
+	 4 Remove
+	 5 Agree
+	 6 Create
+	 7 Add
+	 8 Player
+	 9 Take
+	10 Use
+	11 Buy
+	12 Sell
+	13 Open
+	14 Close
+	15 Msg
+	16 Spec
+	17 Admin
+	18 List
+	20 Tell
+	21 Report
+	22 Announce
+	23 Server
+	24 Drop
+	25 Junk
+	26 Obtain
+	27 Get
+	28 Kick
+	29 Rank
+	30 Target_Self
+	31 Target_Other
+	33 Target_Group
+	34 Dialog
+	240 Ping
+	241 Pong
+	242 Net3
+	255 Init
+}
+
+// ---
+
+enum AdminLevel : char
+{
+	0 Player
+	1 Guide
+	2 Guardian
+	3 GM
+	4 HGM
+}
+
+enum Direction : char
+{
+	0 Down
+	1 Left
+	2 Up
+	3 Right
+}
+
+enum Emote : char
+{
+	 1 Happy
+	 2 Depressed
+	 3 Sad
+	 4 Angry
+	 5 Confused
+	 6 Surprised
+	 7 Hearts
+	 8 Moon
+	 9 Suicidal
+	10 Embarrassed
+	11 Drunk
+	12 Trade
+	13 LevelUp
+	14 Playful
+}
+
+enum QuestPage : char
+{
+	1 Progress
+	2 History
+}
+
+enum Gender : char
+{
+	0 Female
+	1 Male
+}
+
+enum Skin : char
+{
+	0 White
+	1 Tan
+	2 Yellow
+	3 Orc
+	4 Skeleton
+	5 Panda
+	6 Fish
+}
+
+enum PaperdollIcon : char
+{
+	 0 Normal
+	 4 GM
+	 5 HGM
+	 6 Party
+	 9 GM_Party
+	10 HGM_Party
+}
+
+enum AvatarSlot : char
+{
+	1 Clothes
+	2 Hair
+	3 HairColor
+}
+
+enum TalkReply : short
+{
+	1 NotFound
+}
+
+enum SitState : char
+{
+	0 Stand
+	1 Chair
+	2 Floor
+}
+
+enum SitAction : char
+{
+	1 Sit
+	2 Stand
+}
+
+enum TrainType : char
+{
+	1 Stat
+	2 Skill
+}
+
+enum BookIcon : short
+{
+	 3 Item
+	 5 Talk
+	 8 Kill
+	10 Step
+}
+
+enum DialogEntryType : char
+{
+	1 Text
+	2 Link
+}
+
+enum DialogReply : char
+{
+	1 OK
+	2 Link
+}
+
+enum InitReply : byte
+{
+	  1 Out_Of_Date
+	  2 OK
+	  3 Banned
+	  5 File_Map
+	  6 File_EIF
+	  7 File_ENF
+	  8 File_ESF
+	  9 Players
+	 10 Map_Mutation
+	 11 Friend_List_Players
+	 12 File_ECF
+}
+
+enum InitBanType : byte
+{
+	0 Temp
+	2 Perm
+}
+
+enum FileType : char
+{
+	1 Map
+	2 Item
+	3 NPC
+	4 Spell
+	5 Class
+}
+
+enum GuildReply : short
+{
+	 1 Busy
+	 2 Not_Approved
+	 3 Already_Member
+	 4 No_Candidates
+	 5 Exists
+	 6 Create_Begin
+	 7 Create_Add_Confirm
+	 8 Create_Add
+	 9 Recruiter_Offline
+	10 Recruiter_Not_Here
+	11 Recruiter_Wrong_Guild
+	12 Not_Recruiter
+	13 Join_Request
+	14 Not_Present
+	15 Account_Low
+	16 Accepted
+	17 Not_Found
+	18 Updated
+	19 Ranks_Updated
+	20 Remove_Leader
+	21 Remove_Not_Member
+	22 Removed
+	23 Ranking_Leader
+	24 Ranking_Not_Member
+}
+
+enum GuildInfoType : short
+{
+	1 Description
+	2 Ranks
+	3 Bank
+}
+
+enum MapEffect : char
+{
+	1 Quake
+}
+
+enum InnUnsubscribeReply : char
+{
+	0 Not_Citizen
+	1 Unsubscribed
+}
+
+enum SkillMasterReply : short
+{
+	1 Remove_Items
+	2 Wrong_Class
+}
+
+enum PartyRequestType : char
+{
+	0 Join
+	1 Invite
+}
+
+enum CharacterReply : short
+{
+	1 Exists
+	2 Full
+	3 Not_Approved
+	5 OK
+	6 Deleted
+}
+
+enum AccountReply : short
+{
+	1 Exists
+	2 Not_Approved
+	3 Created
+	5 Change_Failed
+	6 Changed
+}
+
+enum LoginReply : short
+{
+	1 Wrong_User
+	2 Wrong_UserPass
+	3 OK
+	5 LoggedIn
+	6 Busy
+}
+
+enum WarpAnimation : char
+{
+	0 None
+	1 Scroll
+	2 Admin
+}
+
+enum WarpReply : char
+{
+	1 Local
+	2 MapSwitch
+}
+
+enum ItemType : char
+{
+	 1 Static
+	 3 Money
+	 4 Heal
+	 5 Teleport
+	 6 Spell
+	 7 EXPReward
+	 8 StatReward
+	 9 SkillReward
+	10 Key
+	11 Weapon
+	12 Shield
+	13 Armor
+	14 Hat
+	15 Boots
+	16 Gloves
+	17 Accessory
+	18 Belt
+	19 Necklace
+	20 Ring
+	21 Armlet
+	22 Bracer
+	23 Beer
+	24 EffectPotion
+	25 HairDye
+	26 CureCurse
+}
+
+// ---
+
+struct Paperdoll_BAHWS
+{
+	short boots
+	short armor
+	short hat
+	short weapon
+	short shield
+}
+
+struct Paperdoll_BAHSW
+{
+	short boots
+	short armor
+	short hat
+	short shield
+	short weapon
+}
+
+struct Paperdoll_B000A0HSW
+{
+	short boots
+	short = 0
+	short = 0
+	short = 0
+	short armor
+	short = 0
+	short hat
+	short shield
+	short weapon
+}
+
+struct Paperdoll_Full
+{
+	short boots
+	short accessory
+	short gloves
+	short belt
+	short armor
+	short necklace
+	short hat
+	short shield
+	short weapon
+	short ring[2]
+	short armlet[2]
+	short bracer[2]
+}
+
+struct Coords
+{
+	char x
+	char y
+}
+
+struct Weight
+{
+	char current
+	char max
+}
+
+struct Item
+{
+	short id
+	int amount
+}
+
+struct ReverseItem
+{
+	int amount
+	short id
+}
+
+"Used for shops, lockers, and various item transfers"
+struct ShortItem
+{
+	short id
+	three amount
+}
+
+"Used for craft ingredients"
+struct VeryShortItem
+{
+	short id
+	char amount
+}
+
+struct Spell
+{
+	short id
+	short level
+}
+
+struct CharacterMapInfo
+{
+	string name
+	short id
+	short map_id
+	struct Coords coords
+	Direction direction
+	char class_id
+	raw_string(3) guild_tag
+	char level
+	char gender
+	char hairstyle
+	char haircolor
+	Skin skin_id
+	short max_hp
+	short hp
+	short max_tp
+	short tp
+	struct Paperdoll_B000A0HSW paperdoll
+	SitState sit_state
+	char invisible
+	break
+}
+
+struct NPCMapInfo
+{
+	char index
+	short id
+	struct Coords coords
+	Direction direction
+}
+
+struct ItemMapInfo
+{
+	short uid
+	short id
+	struct Coords coords
+	three amount
+}
+
+struct AvatarChange
+{
+	short player_id
+	AvatarSlot slot
+	char sound
+
+	union(slot)
+	{
+		Clothes: clothes
+		{
+			struct Paperdoll_BAHWS paperdoll
+		}
+
+		Hair: hair
+		{
+			char style
+			char color
+		}
+
+		HairColor: hair_color
+		{
+			char color
+		}
+	}
+}
+
+struct NearbyInfo
+{
+	char num_characters
+	break
+	struct CharacterMapInfo characters[num_characters]
+	struct NPCMapInfo npcs[]
+	break
+	struct ItemMapInfo items[]
+}
+
+// --- Init
+
+struct OnlinePlayers
+{
+	string name
+	string title
+	char = 0
+	PaperdollIcon icon
+	char class_id
+	raw_string(3) guild_tag
+	break
+}
+
+"Initialization request"
+client_packet(Init, Init)
+{
+	three challenge
+	char version[3]
+	char = 0
+	char = 0
+	raw_string hdid
+
+	fn static eo_int stupid_hash(eo_int i)
+	{
+		++i;
+		return 110905 + (i % 9 + 1) * ((11092004 - i) % ((i % 11 + 1) * 119)) * 119 + i % 2004;
+	}
+}
+
+"Initialization reply"
+server_packet(Init, Init)
+{
+	InitReply reply_code
+
+	union(reply_code)
+	{
+		Out_Of_Date: out_of_date
+		{
+			char version[3]
+		}
+
+		OK: ok
+		{
+			byte seq_bytes[2]
+			byte multi[2]
+			short player_id
+			int response
+
+			fn unsigned seq_start() const
+			{
+				unsigned s1 = seq_bytes[0];
+				unsigned s2 = seq_bytes[1];
+
+				return (s1 * 7 + s2 - 13);
+			}
+		}
+
+		Banned: banned
+		{
+			InitBanType ban_type
+
+			union(ban_type)
+			{
+				Temp: ban_temp
+				{
+					byte mins_remaining
+				}
+			}
+		}
+
+		File_Map: file_map
+		{
+			raw_string content
+		}
+
+		File_EIF: file_eif
+		{
+			char file_id
+			raw_string content
+		}
+
+		File_ENF: file_enf
+		{
+			char file_id
+			raw_string content
+		}
+
+		File_ESF: file_esf
+		{
+			char file_id
+			raw_string content
+		}
+
+		File_ECF: file_ecf
+		{
+			char file_id
+			raw_string content
+		}
+
+		Map_Mutation: map_mutation
+		{
+			raw_string content
+		}
+
+		Players: players
+		{
+			short num_online
+			break
+			struct OnlinePlayers list[]
+		}
+
+		Friend_List_Players: friends
+		{
+			// Should probably be number of friends but what do I know
+			short num_online
+			break
+			// EOSERV is generous enough to send each player name twice
+			string list[]
+		}
+	}
+}
+
+
+// --- Connection
+
+"Confirm initialization data"
+client_packet(Connection, Accept)
+{
+	// TODO: EOSERV ignores this so I don't know what goes here
+}
+
+"Ping reply"
+client_packet(Connection, Ping)
+{
+	// empty
+}
+
+"Ping request"
+server_packet(Connection, Player)
+{
+	short seq1
+	char seq2
+
+	fn unsigned seq_start() const
+	{
+		return unsigned(seq1) - unsigned(seq2);
+	}
+}
+
+
+// --- Account
+
+"Request creating an account"
+client_packet(Account, Request)
+{
+	raw_string username
+}
+
+"Confirm creating an account"
+client_packet(Account, Create)
+{
+	short session_id
+	char = 0
+	string username
+	string password
+	string fullname
+	string location
+	string email
+	string computer
+	string hdid
+}
+
+"Change password"
+client_packet(Account, Agree)
+{
+	string username
+	string oldpassword
+	string newpassword
+}
+
+"Reply to client Account-family packets"
+server_packet(Account, Reply)
+{
+	AccountReply reply_code
+	raw_string ok_no
+
+	fn eo_short session_id() const
+	{
+		return eo_short(reply_code);
+	}
+}
+
+
+// --- Character
+
+"Character selection screen character info"
+struct Character_Info
+{
+	string name
+	int id
+	char level
+	Gender gender
+	char hairstyle
+	char haircolor
+	Skin skin
+	AdminLevel admin
+	struct Paperdoll_BAHSW paperdoll
+	break
+}
+
+"Character selection screen character info"
+struct Character_List
+{
+	char num_characters
+	// Is this really a sound effect or did I make that up
+	char sound_effect
+	break
+
+	struct Character_Info characters[num_characters]
+}
+
+"Request to create a character"
+client_packet(Character, Request)
+{
+}
+
+"Confirm creating a character"
+client_packet(Character, Create)
+{
+	short session_id
+	Gender gender
+	short hairstyle
+	short harcolor
+	Skin:short skin
+	byte = 0
+	string name
+}
+
+"Confirm deleting character from an account"
+client_packet(Character, Remove)
+{
+	short session_id
+	int character_id
+}
+
+"Request to delete a character from an account"
+client_packet(Character, Take)
+{
+	int character_id
+}
+
+"Reply to client Character-family packets"
+server_packet(Character, Reply)
+{
+	CharacterReply reply_code
+	raw_string ok_no
+
+	union(reply_code)
+	{
+		OK: ok
+		{
+			struct Character_List character_list
+		}
+
+		Deleted: deleted
+		{
+			struct Character_List character_list
+		}
+	}
+
+	fn eo_short session_id() const
+	{
+		return eo_short(reply_code);
+	}
+}
+
+"Reply to client Character_Take"
+server_packet(Character, Player)
+{
+	short session_id
+	int character_id
+}
+
+
+// --- Login
+
+"Login request"
+client_packet(Login, Request)
+{
+	string username
+	string password
+}
+
+"Login reply"
+server_packet(Login, Reply)
+{
+	LoginReply reply_code
+
+	union(reply_code)
+	{
+		OK: ok
+		{
+			struct Character_List character_list
+		}
+	}
+}
+
+
+// --- Welcome
+
+struct ServerSettings
+{
+	short jail_map
+	short unk1
+	char unk2
+	char unk3
+	short light_guide_flood_rate
+	short guardian_flood_rate
+	short gm_flood_rate
+	short unk4
+}
+
+enum WelcomeCode : short
+{
+	1 SelectCharacter
+	2 EnterGame
+}
+
+"Selected a character"
+client_packet(Welcome, Request)
+{
+	int character_id
+}
+
+"Entering game"
+client_packet(Welcome, Msg)
+{
+	// Not sure what this is
+	three = 0
+	int character_id
+}
+
+"Requesting a file"
+client_packet(Welcome, Agree)
+{
+	FileType file_type
+}
+
+"Reply to selecting a character / entering game"
+server_packet(Welcome, Reply)
+{
+	WelcomeCode welcome_code
+
+	union(welcome_code)
+	{
+		SelectCharacter: select_character
+		{
+			short player_Id
+			int character_id
+			short map_id
+			byte map_hash[4]
+			three map_filename
+			byte eif_hash[4]
+			byte enf_hash[4]
+			byte esf_hash[4]
+			byte ecf_hash[4]
+			string name
+			string title
+			string guild_name
+			string guild_rank_name
+			char class_id
+			raw_string(3) guild_tag
+			AdminLevel admin
+			char level
+			int experience
+			int usage
+			struct CharacterStats2 stats
+			struct Paperdoll_Full paperdoll
+			char guild_rank
+			struct ServerSettings settings
+			char login_message
+			break
+		}
+
+		EnterGame: enter_game
+		{
+			break
+			string news[9]
+			struct Weight weight
+			struct Item items[]
+			break
+			struct Spell spells[]
+			break
+			struct NearbyInfo nearby
+		}
+	}
+}
+
+
+// --- AdminInteract
+
+enum AdminMessageType : char
+{
+	1 Message
+	2 Report
+}
+
+struct CharacterStats4
+{
+	short hp
+	short max_hp
+	short tp
+	short max_tp
+	struct CharacterBaseStats base
+	struct CharacterSecondaryStats secondary
+}
+
+"Talk to admin"
+client_packet(AdminInteract, Tell)
+{
+	raw_string message
+}
+
+"Report character"
+client_packet(AdminInteract, Report)
+{
+	string reportee
+	raw_string message
+}
+
+"Incoming admin report"
+server_packet(AdminInteract, Reply)
+{
+	AdminMessageType message_type
+	break
+
+	union(message_type)
+	{
+		Message: message
+		{
+			string player_name
+			string message
+			string reportee_name
+		}
+
+		Report: report
+		{
+			string player_name
+			string message
+		}
+	}
+}
+
+"Nearby player disappearing (admin hide)"
+server_packet(AdminInteract, Remove)
+{
+	short player_id
+}
+
+"Nearby player appearing (admin un-hide)"
+server_packet(AdminInteract, Agree)
+{
+	short player_id
+}
+
+"Admin character inventory popup"
+server_packet(AdminInteract, List)
+{
+	string name
+	int usage
+	break
+	int gold_bank
+	break
+	struct Item inventory[]
+	break
+	struct ShortItem bank[]
+	break
+}
+
+"Admin character info popup"
+server_packet(AdminInteract, Tell)
+{
+	string name
+	int usage
+	break
+	break
+	int exp
+	char level
+	short map_id
+	struct Coords map_coords
+	struct CharacterStats4 stats
+	short light
+	short dark
+	short fire
+	short water
+	short earth
+	short wind
+	struct Weight weight
+}
+
+// --- Global
+
+"Enable whispers"
+client_packet(Global, Remove)
+{
+	char = 'n'
+}
+
+"Disable whispers"
+client_packet(Global, Player)
+{
+	char = 'y'
+}
+
+"Opened global tab"
+client_packet(Global, Open)
+{
+	char = 'y'
+}
+
+"Closed global tab"
+client_packet(Global, Open)
+{
+	char = 'n'
+}
+
+
+// --- Talk
+
+"Guild chat message"
+client_packet(Talk, Request)
+{
+	raw_string message
+}
+
+"Party chat message"
+client_packet(Talk, Open)
+{
+	raw_string message
+}
+
+"Global chat message"
+client_packet(Talk, Msg)
+{
+	raw_string message
+}
+
+"Private chat message"
+client_packet(Talk, Tell)
+{
+	string name
+	raw_string message
+}
+
+"Public chat message"
+client_packet(Talk, Report)
+{
+	raw_string message
+}
+
+"Admin chat message"
+client_packet(Talk, Admin)
+{
+	raw_string message
+}
+
+"Admin announcement"
+client_packet(Talk, Announce)
+{
+	raw_string message
+}
+
+"Guild chat message"
+server_packet(Talk, Request)
+{
+	string player_name
+	string message
+}
+
+"Party chat message"
+server_packet(Talk, Open)
+{
+	short player_id
+	string message
+}
+
+"Global chat message"
+server_packet(Talk, Msg)
+{
+	string player_name
+	string message
+}
+
+"Private chat message"
+server_packet(Talk, Tell)
+{
+	string player_name
+	string message
+}
+
+"Public chat message"
+server_packet(Talk, Player)
+{
+	short player_id
+	string message
+}
+
+"Admin chat message"
+server_packet(Talk, Admin)
+{
+	string player_name
+	string message
+}
+
+"Admin announcement"
+server_packet(Talk, Announce)
+{
+	string player_name
+	string message
+}
+
+"Server message"
+client_packet(Talk, Server)
+{
+	raw_string message
+}
+
+"Status bar message"
+client_packet(Message, Open)
+{
+	raw_string message
+}
+
+"Temporary mute applied"
+server_packet(Talk, Spec)
+{
+	string admin_name
+}
+
+
+// --- Attack
+
+"Attacking"
+client_packet(Attack, Use)
+{
+	Direction direction
+	three timestamp
+}
+
+"Nearby player attacking"
+server_packet(Attack, Player)
+{
+	short player_id
+	Direction direction
+}
+
+"Nearby player hit by another player"
+server_packet(Attack, Reply)
+{
+	short player_id
+	short victim_id
+	three damage
+	Direction direction
+	char hp_pct
+	char died
+}
+
+
+// --- Chair
+
+"Sitting on a chair"
+client_packet(Chair, Request)
+{
+	SitAction sit_action
+	struct Coords coords
+	// TODO: Check if coords only appear for sit actions
+}
+
+"Nearby player sitting on a chair"
+server_packet(Chair, Player)
+{
+	short player_id
+	struct Coords coords
+	Direction direction
+	char = 0
+}
+
+
+// --- Sit
+
+"Floor sit/stand request"
+client_packet(Sit, Request)
+{
+	SitAction sit_action
+}
+
+"Nearby player sitting down"
+server_packet(Sit, Player)
+{
+	short player_id
+	struct Coords coords
+	Direction direction
+	char = 0
+}
+
+"Your character standing up"
+server_packet(Sit, Close)
+{
+	short player_id
+	struct Coords coords
+}
+
+"Nearby player standing up"
+server_packet(Sit, Remove)
+{
+	short player_id
+	struct Coords coords
+}
+
+
+// --- Emote
+
+"Doing an emote"
+client_packet(Emote, Report)
+{
+	Emote emote
+}
+
+"Nearby player an emote"
+client_packet(Emote, Player)
+{
+	short player_id
+	Emote emote
+}
+
+"Nearby player doing an effect"
+client_packet(Effect, Player)
+{
+	short player_id
+	three effect_id
+}
+
+
+// --- Face
+
+"Facing a direction"
+client_packet(Face, Player)
+{
+	Direction direction
+}
+
+"Nearby player facing a direction"
+client_packet(Emote, Player)
+{
+	short player_id
+	Direction direction
+}
+
+
+// --- Walk
+
+struct WalkCommon
+{
+	Direction direction
+	three timestamp
+	struct Coords coords
+
+}
+
+"Walking with #nowall"
+client_packet(Walk, Admin)
+{
+	struct WalkCommon walk
+}
+
+"Walking through a player"
+client_packet(Walk, Spec)
+{
+	struct WalkCommon walk
+}
+
+"Walking"
+client_packet(Walk, Player)
+{
+	struct WalkCommon walk
+}
+
+"Nearby player has disappeared from view"
+server_packet(Avatar, Remove)
+{
+	short player_id
+
+	// TODO: Represent optionally present data
+	WarpAnimation animation
+}
+
+"Player has appeared in nearby view"
+server_packet(Players, Agree)
+{
+	struct CharacterMapInfo character
+	char = 1
+}
+
+"Nearby player has walked"
+server_packet(Walk, Player)
+{
+	short player_id
+	Direction direction
+	struct Coords coords
+}
+
+"Items appearing in nearby view"
+server_packet(Walk, Reply)
+{
+	// This is probably characters and NPCs but EOSERV never filled this out
+	break
+	break
+	struct ItemMapInfo items[]
+}
+
+
+// --- Bank
+
+"Talked to a banker NPC"
+client_packet(Bank, Open)
+{
+	short npc_id
+}
+
+"Depositing gold"
+client_packet(Bank, Add)
+{
+	int amount
+}
+
+"Withdrawing gold"
+client_packet(Bank, Add)
+{
+	int amount
+}
+
+"Open banker NPC interface"
+server_packet(Bank, Open)
+{
+	int gold_bank
+	three session_token
+	char locker_upgrades
+}
+
+"Update gold counts after deposit/withdraw"
+server_packet(Bank, Reply)
+{
+	int gold_inventory
+	int gold_bank
+}
+
+// --- Locker
+
+"Placing an item in a bank locker"
+client_packet(Locker, Add)
+{
+	struct Coords locker_coords
+	struct ShortItem deposit_item
+}
+
+"Taking an item from a bank locker"
+client_packet(Locker, Take)
+{
+	struct Coords locker_coords
+	short take_item_id
+}
+
+"Opening a bank locker"
+client_packet(Locker, Open)
+{
+	struct Coords locker_coords
+}
+
+"Buying a locker space upgrade from a banker NPC"
+client_packet(Locker, Buy)
+{
+	// empty
+}
+
+"Response to adding an item to a bank locker"
+server_packet(Locker, Reply)
+{
+	struct Item deposited_item
+	struct Weight weight
+	struct ShortItem locker_items[]
+}
+
+"Response to taking an item from a bank locker"
+server_packet(Locker, Get)
+{
+	struct ShortItem taken_item
+	struct Weight weight
+	struct ShortItem locker_items[]
+}
+
+"Opening a bank locker"
+server_packet(Locker, Open)
+{
+	struct Coords locker_coords
+	struct ShortItem locker_items[]
+}
+
+"Response to buying a locker space upgrade from a banker NPC"
+server_packet(Locker, Buy)
+{
+	int gold_amount
+	char locker_upgrades
+}
+
+
+// --- Citizen
+
+"Sleeping at an inn"
+client_packet(Citizen, Request)
+{
+	// TODO: EOSERV doesn't implement this
+}
+
+"Subscribing to a town"
+client_packet(Citizen, Reply)
+{
+	// Check me: Not sure what these 2 break bytes are
+	short session_id
+	break
+	short npc_id
+	break
+	string answer1
+	string answer2
+	raw_string answer3
+}
+
+"Giving up citizenship of a town"
+client_packet(Citizen, Remove)
+{
+	// Check me: Not sure if this is the session ID or if there's any proceeding data
+	short session_id
+}
+
+"Talking to a citizenship NPC"
+client_packet(Citizen, Open)
+{
+	short npc_index
+}
+
+"Response to subscribing to a town"
+server_packet(Citizen, Reply)
+{
+	char questions_wrong
+}
+
+"Response to giving up citizenship of a town"
+client_packet(Citizen, Remove)
+{
+	InnUnsubscribeReply reply_code
+}
+
+"Response to to a citizenship NPC"
+client_packet(Citizen, Open)
+{
+	three vendor_id
+	char current_home_id
+	short session_id
+	break
+	string question1
+	string question2
+	raw_string question3
+}
+
+// TODO: Server sleep packet
+
+
+// --- Shop
+
+struct ShopTradeItem
+{
+	short item_id
+	three buy_price
+	three sell_price
+	char max_buy_amount
+}
+
+struct ShopCraftItem
+{
+	short item_id
+	struct VeryShortItem ingredients[4]
+}
+
+"Crafting an item from a shop" 
+client_packet(Shop, Create)
+{
+	short craft_item_id
+	int session_id
+}
+
+"Purchasing an item from a shop"
+client_packet(Shop, Buy)
+{
+	short buy_item_id
+	int session_id
+}
+
+"Selling an item to a shop"
+client_packet(Shop, Sell)
+{
+	struct Item sell_item
+	int session_id
+}
+
+"Talking to a shop NPC"
+client_packet(Shop, Open)
+{
+	short npc_index
+}
+
+"Response to crafting an item from a shop"
+server_packet(Shop, Create)
+{
+	short craft_item_id
+	struct Weight weight
+	struct Item ingredients[4]
+}
+
+"Response to purchasing an item from a shop"
+server_packet(Shop, Buy)
+{
+	int gold_amount
+	struct Item bought_item
+	struct Weight weight
+}
+
+"Response to selling an item to a shop"
+server_packet(Shop, Sell)
+{
+	struct ReverseItem sold_item
+	int gold_amount
+	struct Weight weight
+}
+
+"Response from talking to a shop NPC"
+server_packet(Shop, Open)
+{
+	short session_id
+	string shop_name
+	struct ShopTradeItem trade_items[]
+	break
+	struct ShopCraftItem craft_items[]
+	break
+}
+
+
+// --- StatSkill
+
+struct CharacterBaseStats
+{
+	short str
+	short intl
+	short wis
+	short agi
+	short con
+	short cha
+}
+
+struct CharacterSecondaryStats
+{
+	short mindam
+	short maxdam
+	short accuracy
+	short evade
+	short armor
+}
+
+struct CharacterStats1
+{
+	short stat_points
+	short skill_points
+	short hp
+	short max_hp
+	short tp
+	short max_tp
+	short max_sp
+	struct CharacterBaseStats base
+	struct CharacterSecondaryStats secondary
+}
+
+struct CharacterStats2
+{
+	short hp
+	short max_hp
+	short tp
+	short max_tp
+	short max_sp
+	short stat_points
+	short skill_points
+	short karma
+	struct CharacterSecondaryStats secondary
+	struct CharacterBaseStats base
+}
+
+struct CharacterStats3
+{
+	struct CharacterBaseStats base
+	short max_hp
+	short max_tp
+	short max_sp
+	short max_weight
+	struct CharacterSecondaryStats secondary
+}
+
+struct SkillLearn
+{
+	short id
+	char level_req
+	char class_req
+	int cost
+	short skill_req[4]
+	struct CharacterBaseStats stat_req
+}
+
+"Talking to a skill master NPC" 
+client_packet(StatSkill, Open)
+{
+	short npc_index
+}
+
+"Learning a skill from a skill master" 
+client_packet(StatSkill, Take)
+{
+	int session_id
+	short spell_id
+}
+
+"Forgetting a skill at a skill master" 
+client_packet(StatSkill, Remove)
+{
+	int session_id
+	short spell_id
+}
+
+enum StatId : short
+{
+	1 Str
+	2 Int
+	3 Wis
+	4 Agi
+	5 Con
+	6 Cha
+}
+
+"Spending a stat point on a stat or skill" 
+client_packet(StatSkill, Add)
+{
+	TrainType action_type
+
+	union(action_type)
+	{
+		Stat: stat
+		{
+			StatId stat_id
+		}
+
+		Skill: skill
+		{
+		}
+	}
+}
+
+"Resetting stats at a skill master"
+client_packet(StatSkill, Junk)
+{
+	int session_id
+}
+
+"Response from talking to a skill master NPC" 
+server_packet(StatSkill, Open)
+{
+	short session_id
+	string shop_name
+	struct SkillLearn skills[]
+}
+
+"Response to attempting to learn a skill from a skill master" 
+server_packet(StatSkill, Reply)
+{
+	SkillMasterReply reply_code
+
+	union(reply_code)
+	{
+		Remove_Items: remove_items
+		{
+			// TODO: EOSERV doesn't implement - is this really empty?
+		}
+
+		Wrong_Class: wrong_class
+		{
+			short class_id
+		}
+
+		// FIXME: Add support for this to the parser
+		default: ok
+		{
+			int gold_amount
+		}
+	}
+	
+	fn eo_short spell_id() const
+	{
+		return eo_short(reply_code);
+	}
+}
+
+"Response to forgetting a skill at a skill master"
+server_packet(StatSkill, Remove)
+{
+	short spell_id
+}
+
+"Response to spending stat points"
+server_packet(StatSkill, Player)
+{
+	short stat_points
+	struct CharacterStats3 stats
+}
+
+"Response to spending skill points"
+server_packet(StatSkill, Accept)
+{
+	short skill_points
+	struct Spell spell
+}
+
+"Response to resetting character"
+server_packet(StatSkill, Junk)
+{
+	struct CharacterStats1 stats
+}
+
+
+
+// --- Item
+
+struct ItemCharacterStats
+{
+	short max_hp
+	short max_tp
+	struct CharacterBaseStats base
+	struct CharacterSecondaryStats secondary
+}
+
+"Using an item"
+client_packet(Item, Use)
+{
+	short use_item_id
+}
+
+"Dropping items on the ground"
+client_packet(Item, Drop)
+{
+	// Official EO sends either 3 or 4 bytes for drop_item.amount
+	struct Item drop_item
+	struct Coords coords
+}
+
+"Junking items"
+client_packet(Item, Junk)
+{
+	struct Item junk_item
+}
+
+"Taking items from the ground"
+client_packet(Item, Get)
+{
+	short take_item_index
+}
+
+"Reply to using an item"
+server_packet(Item, Reply)
+{
+	ItemType used_item_type
+	struct Item used_item
+	struct Weight weight
+
+	union(used_item_type)
+	{
+		Heal: heal
+		{
+			int hp_gain
+			short hp
+			short tp
+		}
+
+		HairDye: hair_dye
+		{
+			char hair_color
+		}
+
+		EffectPotion: effect_potion
+		{
+			short effect_id
+		}
+
+		CureCurse: cure_curse
+		{
+			struct ItemCharacterStats stats
+		}
+
+		EXPReward: exp_reward
+		{
+			int experience
+			char level_up
+			short stat_points
+			short skill_points
+			short max_hp
+			short max_tp
+			short max_sp
+		}
+	}
+}
+
+"Reply to dropping items on the ground"
+server_packet(Item, Drop)
+{
+	struct ShortItem dropped_item
+	int = 0
+	short item_index
+	struct Coords coords
+	struct Weight weight
+}
+
+"Item appeared on the ground"
+server_packet(Item, Add)
+{
+	short item_id
+	short item_index
+	three item_amount
+	struct Coords coords
+}
+
+"Reply to junking items"
+server_packet(Item, Junk)
+{
+	struct ShortItem junked_item
+	int junked_item_amount
+	struct Weight weight
+}
+
+"Reply to taking items from the ground"
+server_packet(Item, Get)
+{
+	short taken_item_index
+	struct ShortItem taken_item
+	struct Weight weight
+}
+
+"Receive item (from quest)"
+server_packet(Item, Get)
+{
+	struct ShortItem item
+	char cur_weight
+}
+
+"Lose item (from quest)"
+server_packet(Item, Get)
+{
+	struct Item item
+	char cur_weight
+}
+
+
+// --- Barber
+
+"Talking to barber NPC"
+client_packet(Barber, Open)
+{
+	short npc_index
+}
+
+"Purchasing a hair-style"
+client_packet(Barber, Buy)
+{
+	short npc_index
+}
+
+"Reply from talking to barber NPC"
+server_packet(Barber, Open)
+{
+	int session_id
+}
+
+"Reply from purchasing a hair-style"
+server_packet(Barber, Open)
+{
+	int gold_amount
+	struct AvatarChange change
+}
+
+
+// --- Board
+
+struct BoardPostListing
+{
+	short post_id
+	break
+	string author
+	string subject
+}
+
+"Removing a post from a town board"
+client_packet(Board, Remove)
+{
+	short board_id
+	short post_id
+}
+
+"Posting a new message to a town board"
+client_packet(Board, Create)
+{
+	short board_id
+	break
+	string post_subject
+	string post_body
+}
+
+"Reading a post on a town board"
+client_packet(Board, Take)
+{
+	short board_id
+	short post_id
+}
+
+"Opening a a town board"
+client_packet(Board, Open)
+{
+	short board_id
+}
+
+"Reply to reading a post on a town board"
+server_packet(Board, Player)
+{
+	short post_id
+	string post_body
+}
+
+"Reply to opening a town board"
+server_packet(Board, Open)
+{
+	char board_id
+	char num_posts
+
+	struct BoardPostListing posts[num_posts]
+}
+
+
+// --- Jukebox
+
+"Opening the jukebox listing"
+client_packet(Jukebox, Open)
+{
+	struct Coords coords
+}
+
+"Requesting a song on a jukebox"
+client_packet(Jukebox, Msg)
+{
+	break
+	break
+	short track_id
+}
+
+"Playing a note with the bard skill"
+client_packet(Jukebox, Use)
+{
+	char instrument_id
+	char note_id
+}
+
+"Reply to successfully requesting a song"
+server_packet(Jukebox, Agree)
+{
+	int gold_amount
+}
+
+"Reply to unsuccessfully requesting a song"
+server_packet(Jukebox, Use)
+{
+	short track_id
+}
+
+"Reply to opening the jukebox listing"
+server_packet(Jukebox, Open)
+{
+	short map_id
+	string jukebox_player
+}
+
+"Someone playing a note with the bard skill nearby"
+server_packet(Jukebox, Msg)
+{
+	short player_id
+	Direction direction
+	char instrument_id
+	char note_id
+}
+
+
+// --- Warp
+
+"Accept a warp request from the server"
+client_packet(Warp, Accept)
+{
+	short map_id
+	// TODO: There should be more bytes here
+}
+
+"Request to download a copy of the map"
+client_packet(Warp, Take)
+{
+	// TODO: There should be some bytes here
+}
+
+"Warp request from server"
+server_packet(Warp, Request)
+{
+	WarpReply request_code
+
+	union(request_code)
+	{
+		Local: local
+		{
+			short map_id
+			struct Coords coords
+		}
+
+		MapSwitch: map_switch
+		{
+			short map_id
+			byte map_hash[4]
+			three map_filesize
+			// TODO: Logic tells me these should be x/y coordinates, but I'm not sure
+			char = 0
+			char = 0
+		}
+	}
+}
+
+"Reply after accepting a warp"
+server_packet(Warp, Agree)
+{
+	char = 2
+	short map_id
+	WarpAnimation warp_anim
+	struct NearbyInfo nearby
+}
+
+
+// --- Paperdoll
+
+struct Paperdoll_Info
+{
+	string name
+	string home
+	string partner
+	string tite
+	string guild
+	string guild_rank
+	short player_Id
+	char class_id
+	Gender gender
+	char = 0
+}
+
+"Request for a player's paperdoll"
+client_packet(Paperdoll, Request)
+{
+	short player_id
+}
+
+"Unequipping an item"
+client_packet(Paperdoll, Remove)
+{
+	short item_id
+	char sub_loc
+}
+
+"Equipping an item"
+client_packet(Paperdoll, Add)
+{
+	short item_id
+	char sub_loc
+}
+
+"Reply to requesting a paperdoll"
+server_packet(Paperdoll, Reply)
+{
+	struct Paperdoll_Info info
+	struct Paperdoll_Full paperdoll
+	PaperdollIcon paperdoll_icon
+}
+
+"Reply to unequipping an item"
+client_packet(Paperdoll, Remove)
+{
+	struct AvatarChange change
+	struct ItemCharacterStats stats
+}
+
+"Reply to equipping an item"
+client_packet(Paperdoll, Agree)
+{
+	struct AvatarChange change
+	struct ItemCharacterStats stats
+}
+
+"Nearby player changed clothes"
+client_packet(Avatar, Agree)
+{
+	struct AvatarChange change
+}
+
+
+// --- Book
+
+"Request for a player's book"
+client_packet(Book, Request)
+{
+	short player_id
+}
+
+"Reply to requesting a book"
+server_packet(Book, Reply)
+{
+	struct Paperdoll_Info info
+	PaperdollIcon paperdoll_icon
+	break
+	string quest_name[]
+}
+
+
+// --- Message
+
+"#ping command request"
+client_packet(Message, Ping)
+{
+	short something
+}
+
+"#ping command reply"
+server_packet(Message, Pong)
+{
+	short something
+}
+
+
+// --- Players
+
+"#find command request"
+client_packet(Players, Accept)
+{
+	raw_string name
+}
+
+"Requesting a list of online players"
+client_packet(Players, List)
+{
+	// empty
+}
+
+"Requesting a list of online friends"
+client_packet(Players, List)
+{
+	// empty
+}
+
+"#find command reply - offline"
+server_packet(Players, Ping)
+{
+	raw_string name
+}
+
+"#find command reply - same map"
+server_packet(Players, Pong)
+{
+	raw_string name
+}
+
+"#find command reply - different map"
+server_packet(Players, Net3)
+{
+	raw_string name
+}
+
+
+// --- Door
+
+"Opening a door"
+client_packet(Door, Open)
+{
+	struct Coords coords
+}
+
+"Door nearby opening"
+server_packet(Door, Open)
+{
+	struct Coords coords
+	char = 0
+}
+
+
+// --- Chest
+
+"Opening a chest"
+client_packet(Chest, Open)
+{
+	struct Coords coords
+}
+
+"Placing an item in to a chest"
+client_packet(Chest, Add)
+{
+	struct Coords coords
+	struct ShortItem add_item
+}
+
+"Taking an item from a chest"
+client_packet(Chest, Take)
+{
+	struct Coords coords
+	short take_item_id
+}
+
+"Reply to opening a chest"
+server_packet(Chest, Open)
+{
+	struct Coords coords
+	struct ShortItem items[]
+}
+
+"Reply to placing an item in to a chest"
+server_packet(Chest, Reply)
+{
+	struct Item added_item
+	struct Weight weight
+	struct ShortItem items[]
+}
+
+"Reply to removing an item from a chest"
+server_packet(Chest, Get)
+{
+	struct ShortItem taken_item
+	struct Weight weight
+	struct ShortItem items[]
+}
+
+"Chest contents updating"
+server_packet(Chest, Agree)
+{
+	struct ShortItem items[]
+}
+
+
+// --- Refresh
+
+"Requesting new info about nearby objects"
+client_packet(Refresh, Request)
+{
+	// empty
+}
+
+// TODO: AutoRefresh ?
+
+server_packet(Refresh, Reply)
+{
+	struct NearbyInfo nearby
+}
+
+
+// --- Party
+
+struct PartyMember
+{
+	short player_id
+	char leader
+	char level
+	char hp_pct
+	string name
+}
+
+"Send party invite / join request"
+client_packet(Party, Request)
+{
+	PartyRequestType request_type
+	short player_id
+}
+
+"Accept party invite / join request"
+client_packet(Party, Accept)
+{
+	PartyRequestType request_type
+	short player_id
+}
+
+"Remove player from a party"
+client_packet(Party, Remove)
+{
+	short player_id
+}
+
+"Request updated party info"
+client_packet(Party, Take)
+{
+	// empty
+}
+
+"Received party invite / join request"
+server_packet(Party, Request)
+{
+	PartyRequestType request_type
+	short player_id
+	raw_string player_name
+}
+
+"Member list recieved when party is first joined"
+server_packet(Party, Create)
+{
+	struct PartyMember members[]
+}
+
+"New player joined the party"
+server_packet(Party, Add)
+{
+	struct PartyMember member
+}
+
+"Player left the party"
+server_packet(Party, Remove)
+{
+	short player_id
+}
+
+"Left / disbanded a party"
+server_packet(Party, Close)
+{
+	break
+}
+
+"Party member list update"
+server_packet(Party, List)
+{
+	struct PartyMember members[]
+}
+
+"Update party member's HP"
+server_packet(Party, Agree)
+{
+	short player_id
+	char hp_pct
+}
+
+"Experience gained from party"
+server_packet(Party, Target_Group)
+{
+	short player_id
+	int experience
+	char level_up
+}
+
+
+// --- Guild
+
+struct GuildStaff
+{
+	char rank
+	break
+	string name
+}
+
+struct GuildMember
+{
+	char rank
+	break
+	string name
+	string rank_name
+}
+
+"Requested to create a guild"
+client_packet(Guild, Request)
+{
+	int session_id
+	break
+	raw_string(3) guild_tag
+	string guild_name
+}
+
+"Accept pending guild creation invite"
+client_packet(Guild, Accept)
+{
+	// empty
+}
+
+"Leave guild"
+client_packet(Guild, Remove)
+{
+	int session_id
+}
+
+"Update the guild description or rank list"
+client_packet(Guild, Agree)
+{
+	int session_id
+	GuildInfoType info_type
+
+	union(info_type)
+	{
+		Description: description
+		{
+			string description
+		}
+
+		Ranks: ranks
+		{
+			string ranks[9]
+		}
+	}
+}
+
+"Final confirm creating a guild"
+client_packet(Guild, Create)
+{
+	int session_id
+	break
+	raw_string(3) guild_tag
+	string guild_name
+	string description
+}
+
+"Request to join a guild"
+client_packet(Guild, Player)
+{
+	int sesssion_id
+	break
+	raw_string(3) guild_tag
+	string recruiter_name
+}
+
+"Request guild bank / ranks / description"
+client_packet(Guild, Take)
+{
+	int session_id
+	GuildInfoType info_type
+
+	union(info_type)
+	{
+		Description: description
+		{
+			string description
+		}
+
+		Ranks: ranks
+		{
+			string ranks[9]
+		}
+
+		Bank: bank
+		{
+			int gold_amount
+		}
+	}
+}
+
+"Accepted a join request"
+client_packet(Guild, Use)
+{
+	short player_id
+}
+
+"Deposit gold in to the guild bank"
+client_packet(Guild, Buy)
+{
+	int session_id
+	int gold_amount
+}
+
+"Talking to a guild master NPC"
+client_packet(Guild, Open)
+{
+	short npc_index
+}
+
+"Requested member list of a guild"
+client_packet(Guild, Tell)
+{
+	int session_id
+	raw_string guild_identity
+}
+
+"Requested general information of a guild"
+client_packet(Guild, Report)
+{
+	int session_id
+	raw_string guild_identity
+}
+
+"Disband guild"
+client_packet(Guild, Junk)
+{
+	int session_id
+}
+
+"Kick member from guild"
+client_packet(Guild, Kick)
+{
+	int session_id
+	raw_string member_name
+}
+
+"Update a member's rank"
+client_packet(Guild, Rank)
+{
+	int sesson_id
+	char rank
+	raw_string member_name
+}
+
+"Generic guild reply messages"
+server_packet(Guild, Reply)
+{
+	GuildReply reply_code
+
+	union(reply_code)
+	{
+		Create_Add: create_add
+		{
+			raw_string name
+		}
+
+		Create_Add_Confirm: create_add_confirm
+		{
+			raw_string name
+		}
+
+		Join_Request: join_request
+		{
+			short player_id
+			raw_string name
+		}
+	}
+}
+
+"Guild create request"
+server_packet(Guild, Request)
+{
+	short player_id
+	raw_string guild_identity
+}
+
+"Guild created"
+server_packet(Guild, Create)
+{
+	short leader_id
+	break
+	string guild_tag
+	string guild_name
+	string rank_name
+	int gold_amount
+}
+
+"Get guild description reply"
+server_packet(Guild, Take)
+{
+	string description
+}
+
+"Get guild rank list reply"
+server_packet(Guild, Rank)
+{
+	string ranks[9]
+}
+
+"Get guild bank reply"
+server_packet(Guild, Rank)
+{
+	int gold_amount
+}
+
+"Deposit guild bank reply"
+server_packet(Guild, Buy)
+{
+	int gold_amount
+}
+
+"Talk to guild master NPC reply"
+server_packet(Guild, Open)
+{
+	three session_id
+}
+
+"Get guild member list reply"
+server_packet(Guild, Tell)
+{
+	short num_members
+	break
+	struct GuildMember members[num_members]
+}
+
+"Get guild info reply"
+server_packet(Guild, Report)
+{
+	string name
+	string tag
+	string create_date
+	string description
+	string wealth
+	string ranks[9]
+	short num_staff
+	break
+	struct GuildStaff staff[num_staff]
+}
+
+"Joined guild info"
+server_packet(Guild, Agree)
+{
+	short recruiter_id
+	break
+	string guild_tag
+	string guild_name
+	string rank_name
+	break
+}
+
+
+// --- Spell
+
+"Begin spell chanting"
+client_packet(Spell, Request)
+{
+	short spell_id
+	three timestamp
+}
+
+// TODO: Need to find out target_type enum numbers
+// Probably 0=self, 1=player, 2=npc
+
+"Self-targeted spell cast"
+client_packet(Spell, Target_Self)
+{
+	char target_type
+	short spell_id
+	three timestamp
+}
+
+"Targeted spell cast"
+client_packet(Spell, Target_Other)
+{
+	char target_type
+	// TODO: Find out what these are
+	char = 0
+	short = 0
+	short spell_id
+	three timestamp
+}
+
+"Group spell cast"
+client_packet(Spell, Target_Group)
+{
+	short spell_id
+	three timestamp
+}
+
+"Nearby player chanting a spell"
+server_packet(Spell, Request)
+{
+	short player_id
+	short spell_id
+}
+
+"Nearby player self-casted a spell"
+server_packet(Spell, Target_Self)
+{
+	short player_id
+	short spell_id
+	int spell_heal_hp
+	char hp_pct
+
+	// TODO: Represent optionally present data
+	short hp
+	short tp
+	short = 1
+}
+
+"Nearby player hit by a spell from a player"
+server_packet(Avatar, Admin)
+{
+	short caster_id
+	short victim_id
+	char caster_direction
+	three damage
+	char hp_pct
+	char victim_died
+	short spell_id
+}
+
+struct GroupHealTargetPlayer
+{
+	break
+	break
+	break
+	break
+	break
+	short player_id
+	char hp_pct
+	short hp
+}
+
+"Nearby player(s) hit by a group spell from a player"
+server_packet(Spell, Target_Group)
+{
+	short spell_id
+	short caster_id
+	short caster_tp
+	short spell_heal_hp
+
+	struct GroupHealTargetPlayer players[]
+}
+
+
+// --- Trade
+
+struct TradeItemData
+{
+	short player1_id
+	struct Item player1_items[]
+	break
+	short player2_id
+	struct Item player2_items[]
+	break
+}
+
+"Requesting a trade with another player"
+client_packet(Trade, Request)
+{
+	char unk1
+	short player_id
+}
+
+"Accepting a trade request"
+client_packet(Trade, Accept)
+{
+	char unk1
+	short player_id
+}
+
+"Remove an item from the trade screen"
+client_packet(Trade, Remove)
+{
+	short item_id
+}
+
+"Mark trade as agreed"
+client_packet(Trade, Agree)
+{
+	char agree_state
+}
+
+"Add an item to the trade screen"
+client_packet(Trade, Add)
+{
+	struct Item add_item
+}
+
+"Cancel the trade"
+client_packet(Trade, Close)
+{
+	char unk1
+}
+
+"Trade request from another player"
+server_packet(Trade, Request)
+{
+	char unk1
+	short player_id
+	raw_string player_name
+}
+
+"Trade window opens"
+server_packet(Trade, Open)
+{
+	short player_id
+	string player_name
+	short your_player_id
+	string your_name
+}
+
+"Trade items updated"
+server_packet(Trade, Reply)
+{
+	struct TradeItemData trade_data
+}
+
+"Trade items updated"
+server_packet(Trade, Use)
+{
+	struct TradeItemData trade_data
+}
+
+"Own agree state updated"
+server_packet(Trade, Spec)
+{
+	char agree_state
+}
+
+"Partner agree state updated"
+server_packet(Trade, Spec)
+{
+	short player_id
+	char agree_state
+}
+
+"Partner closed trade window"
+server_packet(Trade, Close)
+{
+	short player_id
+}
+
+
+// --- NPC activity
+
+"NPC appearing in nearby view"
+server_packet(Appear, Reply)
+{
+	char = 0
+	break
+	struct NPCMapInfo npc
+}
+
+struct LevelUpStats
+{
+	char level
+	short stat_points
+	short skill_points
+	short max_hp
+	short max_tp
+	short max_sp
+}
+
+// NPC/Cast_Reply/Accept could share data probably
+
+"Nearby NPC hit by a player"
+server_packet(NPC, Reply)
+{
+	short player_id
+	char player_direction
+	short npc_index
+	three damage
+	short hp_pct
+	// This is probably something
+	char = 1
+}
+
+"Nearby NPC hit by a spell from a player"
+server_packet(Cast, Reply)
+{
+	short spell_id
+	short player_id
+	char player_direction
+	short npc_index
+	three damage
+	short hp_pct
+	short caster_tp
+}
+
+"Nearby NPC killed by player"
+server_packet(NPC, Spec)
+{
+	short killer_id
+	char killer_direction
+	short npc_index
+	short drop_index
+	short drop_id
+	struct Coords drop_coords
+	int drop_amount
+	three damage
+	int experience
+}
+
+"Nearby NPC killed by player and you levelled up"
+server_packet(NPC, Accept)
+{
+	short killer_id
+	char killer_direction
+	short npc_index
+	short drop_index
+	short drop_id
+	struct Coords drop_coords
+	int drop_amount
+	three damage
+	int experience
+	struct LevelUpStats level_up
+}
+
+"Nearby NPC killed by player spell"
+server_packet(Cast, Spec)
+{
+	short spell_id
+	short killer_id
+	char killer_direction
+	short npc_index
+	short drop_index
+	short drop_id
+	struct Coords drop_coords
+	int drop_amount
+	three damage
+	short caster_tp
+	int experience
+}
+
+"Nearby NPC killed by player spell and you levelled up"
+server_packet(Cast, Accept)
+{
+	short spell_id
+	short killer_id
+	char killer_direction
+	short npc_index
+	short drop_index
+	short drop_id
+	struct Coords drop_coords
+	int drop_amount
+	three damage
+	short caster_tp
+	int experience
+	struct LevelUpStats level_up
+}
+
+"Killing all boss chidren"
+server_packet(NPC, Junk)
+{
+	short npc_id
+}
+
+struct NPCUpdatePos
+{
+	short npc_index
+	struct Coords coords
+	Direction direction
+}
+
+struct NPCUpdateAttack
+{
+	short npc_index
+	char killed_state
+	Direction direction
+	short player_id
+	three damage
+	three hp_pct
+}
+
+struct NPCUpdateChat
+{
+	short npc_index
+	char message_length
+	raw_string(message_length) message
+}
+
+"Main NPC update message"
+server_packet(NPC, Player)
+{
+	struct NPCUpdatePos pos[]
+	break
+	struct NPCUpdateAttack attack[]
+	break
+	struct NPCUpdateChat chat[]
+	break
+}
+
+// --- Quest
+
+struct QuestProgressEntry
+{
+	string name
+	string description
+	short icon
+	short progress
+	short target
+	break
+}
+
+struct DialogQuestEntry
+{
+	short quest_id
+	string quest_name
+}
+
+struct DialogEntry
+{
+	DialogEntryType entry_type
+
+	// Allowing a union here would require a lot of extra implementation work
+	// link_id will just go unused when entry_type != Link
+	short link_id
+	string line
+}
+
+"Talking to a quest NPC"
+client_packet(Quest, Use)
+{
+	short npc_index
+
+	// Quest id is 0 unless manually selected on the dialog
+	short quest_id
+}
+
+"Response to a quest NPC dialog"
+client_packet(Quest, Accept)
+{
+	short session_id
+	short dialog_id
+	short quest_id
+	short npc_index
+	DialogReply reply_type
+
+	union(reply_type)
+	{
+		Link: link
+		{
+			char action
+		}
+	}
+}
+
+"Quest history / progress request"
+client_packet(Quest, List)
+{
+	QuestPage page
+}
+
+"Quest selection dialog"
+server_packet(Quest, Dialog)
+{
+	char quest_count
+	short vendor_id
+	short quest_id
+	short session_id
+	short dialog_id
+	break
+
+	struct DialogQuestEntry quest_entries[quest_count]
+	struct DialogEntry entries[]
+}
+
+"Quest history / progress reply"
+server_packet(Quest, List)
+{
+	QuestPage page
+	// EOSERV sends total number of quests which seems wrong
+	short num_quests
+
+	union(page)
+	{
+		Progress: progress
+		{
+			struct QuestProgressEntry quests[]
+		}
+
+		History: history
+		{
+			string quests[]
+		}
+	}
+}
+
+// This is probably wrong
+"Nearby player levelled up from quest"
+server_packet(Item, Accept)
+{
+	short player_id
+}
+
+
+// --- Arena
+
+"Arena is blocked message"
+server_packet(Arena, Drop)
+{
+	// empty
+}
+
+"Arena start message"
+server_packet(Arena, Use)
+{
+	char num_players
+}
+
+"Arena kill message"
+server_packet(Arena, Spec)
+{
+	short = 0
+	break
+	char = 0
+	break
+	int num_kills
+	break
+	string killer_name
+	string victim_name
+}
+
+"Arena win message"
+server_packet(Arena, Spec)
+{
+	string winner_name
+	int num_kills
+	break
+	string killer_name
+	string victim_name
+}
+
+
+// --- TODO: Law / Priest packets
+
+
+// --- Misc.
+
+enum MapDamageType : char
+{
+	1 TPDrain
+	2 Spikes
+}
+
+struct MapDrainDamageOther
+{
+	short player_id
+	char hp_pct
+	short damage
+}
+
+"HP/TP update"
+server_packet(Recover, Player)
+{
+	short hp
+	short tp
+}
+
+"Stats update"
+server_packet(Recover, List)
+{
+	short class_id
+	struct CharacterStats3 stats
+}
+
+"Karma/experience update"
+server_packet(Recover, Reply)
+{
+	int experience
+	short karma
+	char level_up
+
+	// Only if level_up != 0
+	short stat_points
+	short skill_points
+}
+
+"Map effect"
+server_packet(Effect, Use)
+{
+	MapEffect effect
+	char param
+}
+
+"Map spike timer"
+server_packet(Effect, Report)
+{
+	char = 'S'
+}
+
+"Map spell effect"
+server_packet(Effect, Agree)
+{
+	struct Coords coords
+	short effect_id
+}
+
+"Taking spike or tp drain damage"
+server_packet(Effect, Spec)
+{
+	MapDamageType map_damage_type
+
+	union(map_damage_type)
+	{
+		TPDrain: tp_drain
+		{
+			short tp_damage
+			short tp
+			short max_tp
+		}
+
+		Spikes: spikes
+		{
+			short damage
+			short hp
+			short max_hp
+		}
+	}
+}
+
+"Map drain damage"
+server_packet(Effect, Target_Other)
+{
+	short damage
+	short hp
+	short max_hp
+	struct MapDrainDamageOther others[]
+}
+
+"Nearby character taking spike damage"
+server_packet(Effect, Admin)
+{
+	short player_id
+	char hp_pct
+	char died
+	three damage
+}
+
+"Sound effect"
+server_packet(Music, Player)
+{
+	char sound_id
+}
+
