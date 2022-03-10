@@ -369,12 +369,6 @@ enum ItemType : char
 	26 CureCurse
 }
 
-enum MapInfoReply : char
-{
-	0 NPC
-	1 Character
-}
-
 // ---
 
 struct Paperdoll_BAHWS
@@ -2355,46 +2349,35 @@ server_packet(Refresh, Reply)
 }
 
 // --- MapInfo
-"Requesting MapInfo about a character or npc"
+"Requesting MapInfo about nearby characters and/or npcs"
 client_packet(MapInfo, Request)
 {
-	// TODO: Represent optionally present data
-	short player_id
-	break
-	char npc_index
+	short player_ids[] // can ommit if only requesting npcs
+	break              // can ommit if only requesting players
+	char npc_indexes[] // can ommit if only requesting players
 }
 
 "Requesting MapInfo about a character"
 client_packet(CharacterMapInfo, Request)
 {
-	short player_id
+	short player_ids[] // reads to end
 }
 
 "Requesting MapInfo about a npc"
 client_packet(NPCMapInfo, Request)
 {
-	char = 1
+	char num_npcs // game server ignores this
 	break
-	char npc_index
+	char npc_indexes[] // reads to end
 }
 
-"MapInfo for character or npc"
+"MapInfo for characters and/or npcs"
 server_packet(MapInfo, Reply)
 {
-	MapInfoReply reply_code
-	break
-	union(reply_code)
-	{
-		NPC: npc
-		{
-			struct NPCMapInfo npc_map_info
-		}
-
-		Character: character
-		{
-			struct CharacterMapInfo character_map_info
-		}
-	}
+	char num_entities
+	break // omitted if not sending back characters
+	struct CharacterMapInfo characters[num_entities] // omitted if not sending back characters
+	struct NPCMapInfo npcs[] // reads to end
 }
 
 // --- Party
