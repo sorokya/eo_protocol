@@ -335,7 +335,6 @@ struct EMF_Unknown
 	char = 0
 	char = 0
 	char = 0
-	char = 0
 }
 
 struct EMF_Item
