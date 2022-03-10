@@ -2,7 +2,7 @@
 enum PacketFamily : byte
 {
 	 1 Connection
-	 2 Account 
+	 2 Account
 	 3 Character
 	 4 Login
 	 5 Welcome
@@ -24,9 +24,9 @@ enum PacketFamily : byte
 	24 Party
 	25 Refresh
 	26 NPC
-	27 Player_AutoRefresh
-	28 NPC_AutoRefresh
-	29 Appear
+	27 CharacterMapInfo
+	28 NPCMapInfo
+	29 MapInfo
 	30 Paperdoll
 	31 Effect
 	32 Trade
@@ -330,7 +330,6 @@ enum LoginReply : short
 
 enum WarpAnimation : char
 {
-	0 None
 	1 Scroll
 	2 Admin
 }
@@ -368,6 +367,12 @@ enum ItemType : char
 	24 EffectPotion
 	25 HairDye
 	26 CureCurse
+}
+
+enum MapInfoReply : char
+{
+	0 NPC
+	1 Character
 }
 
 // ---
@@ -419,10 +424,16 @@ struct Paperdoll_Full
 	short bracer[2]
 }
 
-struct Coords
+struct TinyCoords
 {
 	char x
 	char y
+}
+
+Struct Coords
+{
+	short x
+	short y
 }
 
 struct Weight
@@ -491,7 +502,7 @@ struct NPCMapInfo
 {
 	char index
 	short id
-	struct Coords coords
+	struct TinyCoords coords
 	Direction direction
 }
 
@@ -587,10 +598,10 @@ server_packet(Init, Init)
 			short player_id
 			int response
 
-			fn unsigned seq_start() const
+			fn eo2_uint seq_start() const
 			{
-				unsigned s1 = seq_bytes[0];
-				unsigned s2 = seq_bytes[1];
+				eo2_uint s1 = seq_bytes[0];
+				eo2_uint s2 = seq_bytes[1];
 
 				return (s1 * 7 + s2 - 13);
 			}
@@ -682,9 +693,9 @@ server_packet(Connection, Player)
 	short seq1
 	char seq2
 
-	fn unsigned seq_start() const
+	fn eo2_uint seq_start() const
 	{
-		return unsigned(seq1) - unsigned(seq2);
+		return eo2_uint(seq1) - eo2_uint(seq2);
 	}
 }
 
@@ -1226,6 +1237,15 @@ server_packet(Chair, Player)
 	char = 0
 }
 
+"Your character sitting on a chair"
+server_packet(Chair, Reply)
+{
+	short player_id
+	struct Coords coords
+	Direction direction
+	char = 0
+}
+
 
 // --- Sit
 
@@ -1256,6 +1276,15 @@ server_packet(Sit, Remove)
 {
 	short player_id
 	struct Coords coords
+}
+
+"Your character sitting down"
+server_packet(Sit, Reply)
+{
+	short player_id
+	struct Coords coords
+	Direction direction
+	char = 0
 }
 
 
@@ -1291,7 +1320,7 @@ client_packet(Face, Player)
 }
 
 "Nearby player facing a direction"
-client_packet(Emote, Player)
+server_packet(Face, Player)
 {
 	short player_id
 	Direction direction
@@ -1304,7 +1333,7 @@ struct WalkCommon
 {
 	Direction direction
 	three timestamp
-	struct Coords coords
+	struct TinyCoords coords
 
 }
 
@@ -1338,6 +1367,7 @@ server_packet(Avatar, Remove)
 "Player has appeared in nearby view"
 server_packet(Players, Agree)
 {
+	break
 	struct CharacterMapInfo character
 	char = 1
 }
@@ -1350,11 +1380,12 @@ server_packet(Walk, Player)
 	struct Coords coords
 }
 
-"Items appearing in nearby view"
+"Players, NPCs, and Items appearing in nearby view"
 server_packet(Walk, Reply)
 {
-	// This is probably characters and NPCs but EOSERV never filled this out
+	short player_ids[]
 	break
+	char npc_indexes[]
 	break
 	struct ItemMapInfo items[]
 }
@@ -2091,9 +2122,15 @@ server_packet(Warp, Request)
 "Reply after accepting a warp"
 server_packet(Warp, Agree)
 {
-	char = 2
-	short map_id
-	WarpAnimation warp_anim
+	WarpReply reply_code
+	union(reply_code)
+	{
+		MapSwitch: map switch
+		{
+			short map_id
+			WarpAnimation warp_anim
+		}
+	}
 	struct NearbyInfo nearby
 }
 
@@ -2311,13 +2348,54 @@ client_packet(Refresh, Request)
 	// empty
 }
 
-// TODO: AutoRefresh ?
 
 server_packet(Refresh, Reply)
 {
 	struct NearbyInfo nearby
 }
 
+// --- MapInfo
+"Requesting MapInfo about a character or npc"
+client_packet(MapInfo, Request)
+{
+	// TODO: Represent optionally present data
+	short player_id
+	break
+	char npc_index
+}
+
+"Requesting MapInfo about a character"
+client_packet(CharacterMapInfo, Request)
+{
+	short player_id
+}
+
+"Requesting MapInfo about a npc"
+client_packet(NPCMapInfo, Request)
+{
+	char = 1
+	break
+	char npc_index
+}
+
+"MapInfo for character or npc"
+server_packet(MapInfo, Reply)
+{
+	MapInfoReply reply_code
+	break
+	union(reply_code)
+	{
+		NPC: npc
+		{
+			struct NPCMapInfo npc_map_info
+		}
+
+		Character: character
+		{
+			struct CharacterMapInfo character_map_info
+		}
+	}
+}
 
 // --- Party
 
@@ -2868,14 +2946,6 @@ server_packet(Trade, Close)
 
 
 // --- NPC activity
-
-"NPC appearing in nearby view"
-server_packet(Appear, Reply)
-{
-	char = 0
-	break
-	struct NPCMapInfo npc
-}
 
 struct LevelUpStats
 {
