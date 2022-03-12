@@ -139,7 +139,7 @@ struct ENF_NPC
 	short boss
 	short child
 	ENF_NPC_Type type
-	short vendor_id
+	short spec1
 	three hp
 	short = 0
 	short min_damage
