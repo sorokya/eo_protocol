@@ -334,7 +334,7 @@ enum WarpAnimation : char
 	2 Admin
 }
 
-enum WarpReply : char
+enum WarpType : char
 {
 	1 Local
 	2 MapSwitch
@@ -1749,7 +1749,7 @@ server_packet(StatSkill, Open)
 	struct SkillLearn skills[]
 }
 
-"Response to attempting to learn a skill from a skill master" 
+"Response to attempting to learn a skill from a skill master"
 server_packet(StatSkill, Reply)
 {
 	SkillMasterReply reply_code
@@ -1772,7 +1772,7 @@ server_packet(StatSkill, Reply)
 			int gold_amount
 		}
 	}
-	
+
 	fn eo_short spell_id() const
 	{
 		return eo_short(reply_code);
@@ -2079,45 +2079,39 @@ server_packet(Jukebox, Msg)
 client_packet(Warp, Accept)
 {
 	short map_id
-	// TODO: There should be more bytes here
+	short warp_id
 }
 
 "Request to download a copy of the map"
 client_packet(Warp, Take)
 {
-	// TODO: There should be some bytes here
+	short map_id
+	short warp_id
 }
 
 "Warp request from server"
 server_packet(Warp, Request)
 {
-	WarpReply request_code
+	WarpType warp_type
+	short map_id
 
-	union(request_code)
+	union(warp_type)
 	{
-		Local: local
-		{
-			short map_id
-			struct Coords coords
-		}
-
 		MapSwitch: map_switch
 		{
-			short map_id
 			byte map_hash[4]
 			three map_filesize
-			// TODO: Logic tells me these should be x/y coordinates, but I'm not sure
-			char = 0
-			char = 0
 		}
 	}
+
+	short warp_id
 }
 
 "Reply after accepting a warp"
 server_packet(Warp, Agree)
 {
-	WarpReply reply_code
-	union(reply_code)
+	WarpType warp_type
+	union(warp_type)
 	{
 		MapSwitch: map switch
 		{
