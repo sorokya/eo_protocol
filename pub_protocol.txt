@@ -106,7 +106,7 @@ struct EIF_Item
 struct EIF_File
 {
 	raw_string(3) magic
-	byte hash[4]
+	short rid[2]
 	short num_items
 	char = 0
 	struct EIF_Item items[num_items]
@@ -159,7 +159,7 @@ struct ENF_NPC
 struct ENF_File
 {
 	raw_string(3) magic
-	byte hash[4]
+	short rid[2]
 	short num_npcs
 	char = 0
 	struct ENF_NPC npcs[num_npcs]
@@ -193,7 +193,7 @@ struct ECF_Class
 struct ECF_File
 {
 	raw_string(3) magic
-	byte hash[4]
+	short rid[2]
 	short num_classes
 	char = 0
 	struct ECF_Class classes[num_classes]
@@ -262,7 +262,7 @@ struct ESF_Spell
 struct ESF_File
 {
 	raw_string(3) magic
-	byte hash[4]
+	short rid[2]
 	short num_spells
 	char = 0
 	struct ESF_Spell spells[num_spells]
@@ -360,7 +360,7 @@ struct EMF_Warp
 struct EMF_File
 {
 	raw_string(3) magic
-	byte hash[4]
+	short rid[2]
 	raw_string(24) name
 	EMF_Type type
 	EMF_Effect effect

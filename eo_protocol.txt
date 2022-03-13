@@ -904,12 +904,12 @@ server_packet(Welcome, Reply)
 			short player_Id
 			int character_id
 			short map_id
-			byte map_hash[4]
+			short map_rid[2]
 			three map_filename
-			byte eif_hash[4]
-			byte enf_hash[4]
-			byte esf_hash[4]
-			byte ecf_hash[4]
+			short eif_rid[2]
+			short enf_rid[2]
+			short esf_rid[2]
+			short ecf_rid[2]
 			string name
 			string title
 			string guild_name
@@ -2099,7 +2099,7 @@ server_packet(Warp, Request)
 	{
 		MapSwitch: map_switch
 		{
-			byte map_hash[4]
+			short map_rid[2]
 			three map_filesize
 		}
 	}
