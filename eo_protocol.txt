@@ -890,6 +890,34 @@ client_packet(Welcome, Msg)
 client_packet(Welcome, Agree)
 {
 	FileType file_type
+	union (file_type)
+	{
+		Map: map
+		{
+			short player_id
+			short character_id
+		}
+		Item: item
+		{
+			short player_id
+			char file_id
+		}
+		NPC: npc
+		{
+			short player_id
+			char file_id
+		}
+		Spell: spell
+		{
+			short player_id
+			char file_id
+		}
+		Class: class
+		{
+			short player_id
+			char file_id
+		}
+	}
 }
 
 "Reply to selecting a character / entering game"
