@@ -588,7 +588,8 @@ server_packet(Init, Init)
 		OK: ok
 		{
 			byte seq_bytes[2]
-			byte multi[2]
+			byte decode_multiple
+			byte encode_multiple
 			short player_id
 			int response
 
@@ -672,13 +673,15 @@ server_packet(Init, Init)
 "Confirm initialization data"
 client_packet(Connection, Accept)
 {
-	// TODO: EOSERV ignores this so I don't know what goes here
+	short encode_multiple
+	short encode_multiple
+	short player_id
 }
 
 "Ping reply"
 client_packet(Connection, Ping)
 {
-	// empty
+	raw_string k // "k"
 }
 
 "Ping request"
@@ -706,7 +709,7 @@ client_packet(Account, Request)
 client_packet(Account, Create)
 {
 	short session_id
-	char = 0
+	break
 	string username
 	string password
 	string fullname
@@ -728,6 +731,10 @@ client_packet(Account, Agree)
 server_packet(Account, Reply)
 {
 	AccountReply reply_code
+
+	// TODO: Represent optionally present data
+	char sequence_start
+
 	raw_string ok_no
 
 	fn eo_short session_id() const
@@ -758,27 +765,26 @@ struct Character_Info
 struct Character_List
 {
 	char num_characters
-	// Is this really a sound effect or did I make that up
-	char sound_effect
+	char = 1
 	break
-
 	struct Character_Info characters[num_characters]
 }
 
 "Request to create a character"
 client_packet(Character, Request)
 {
+	string new // NEW
 }
 
 "Confirm creating a character"
 client_packet(Character, Create)
 {
 	short session_id
-	Gender gender
+	Gender:short gender
 	short hairstyle
 	short harcolor
 	Skin:short skin
-	byte = 0
+	break
 	string name
 }
 
@@ -881,8 +887,7 @@ client_packet(Welcome, Request)
 "Entering game"
 client_packet(Welcome, Msg)
 {
-	// Not sure what this is
-	three = 0
+	three session_id
 	int character_id
 }
 
@@ -890,31 +895,27 @@ client_packet(Welcome, Msg)
 client_packet(Welcome, Agree)
 {
 	FileType file_type
+	short session_id
 	union (file_type)
 	{
 		Map: map
 		{
-			short player_id
 			short character_id
 		}
 		Item: item
 		{
-			short player_id
 			char file_id
 		}
 		NPC: npc
 		{
-			short player_id
 			char file_id
 		}
 		Spell: spell
 		{
-			short player_id
 			char file_id
 		}
 		Class: class
 		{
-			short player_id
 			char file_id
 		}
 	}
@@ -929,7 +930,7 @@ server_packet(Welcome, Reply)
 	{
 		SelectCharacter: select_character
 		{
-			short player_Id
+			short session_id
 			int character_id
 			short map_id
 			short map_rid[2]
@@ -2107,14 +2108,14 @@ server_packet(Jukebox, Msg)
 client_packet(Warp, Accept)
 {
 	short map_id
-	short warp_id
+	short session_id
 }
 
 "Request to download a copy of the map"
 client_packet(Warp, Take)
 {
 	short map_id
-	short warp_id
+	short session_id
 }
 
 "Warp request from server"
@@ -2132,7 +2133,7 @@ server_packet(Warp, Request)
 		}
 	}
 
-	short warp_id
+	short session_id
 }
 
 "Reply after accepting a warp"
@@ -3070,7 +3071,7 @@ struct NPCUpdateAttack
 	Direction direction
 	short player_id
 	three damage
-	three hp_pct
+	char hp_pct
 }
 
 struct NPCUpdateChat
