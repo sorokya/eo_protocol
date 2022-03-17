@@ -863,13 +863,13 @@ server_packet(Login, Reply)
 struct ServerSettings
 {
 	short jail_map
-	short unk1
-	char unk2
-	char unk3
+	short rescue_map
+	char rescue_x
+	char rescue_y
 	short light_guide_flood_rate
 	short guardian_flood_rate
 	short gm_flood_rate
-	short unk4
+	short hgm_flood_rate
 }
 
 enum WelcomeCode : short
@@ -934,11 +934,15 @@ server_packet(Welcome, Reply)
 			int character_id
 			short map_id
 			short map_rid[2]
-			three map_filename
+			three map_filesize
 			short eif_rid[2]
+			short eif_length
 			short enf_rid[2]
+			short enf_length
 			short esf_rid[2]
+			short esf_length
 			short ecf_rid[2]
+			short ecf_length
 			string name
 			string title
 			string guild_name
