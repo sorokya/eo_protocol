@@ -2105,6 +2105,12 @@ server_packet(Jukebox, Msg)
 	char note_id
 }
 
+"Play background music"
+server_packet(Jukebox, Player)
+{
+        char mfx_id
+}
+
 
 // --- Warp
 
