@@ -1,54 +1,58 @@
 
 enum PacketFamily : byte
 {
-	 1 Connection
+	 1 Security
 	 2 Account
 	 3 Character
 	 4 Login
-	 5 Welcome
-	 6 Walk
-	 7 Face
-	 8 Chair
+	 5 Play
+	 6 Move
+	 7 Direction
+	 8 Sit
 	 9 Emote
+	10 Warp
 	11 Attack
-	12 Spell
+	12 Magic
 	13 Shop
 	14 Item
-	16 StatSkill
+	16 Skill
 	17 Global
-	18 Talk
-	19 Warp
-	21 Jukebox
+	18 Chat
+	19 Map
+	20 Talk
+	21 Music
 	22 Players
-	23 Avatar
-	24 Party
+	23 Player
+	24 Group
 	25 Refresh
 	26 NPC
-	27 CharacterMapInfo
-	28 NPCMapInfo
-	29 MapInfo
+	27 PlayerRange
+	28 NpcRange
+	29 Range
 	30 Paperdoll
 	31 Effect
 	32 Trade
 	33 Chest
 	34 Door
-	35 Message
+	35 System
 	36 Bank
 	37 Locker
 	38 Barber
 	39 Guild
-	40 Music
-	41 Sit
-	42 Recover
+	40 Sound
+	41 Rest
+	42 GameBar
 	43 Board
-	44 Cast
+	44 MagicNpc
 	45 Arena
 	46 Priest
-	47 Marriage
-	48 AdminInteract
-	49 Citizen
+	47 Law
+	48 Admin
+	49 Inn
 	50 Quest
 	51 Book
+	52 Boss
+	250 Err
 	255 Init
 }
 
@@ -157,9 +161,9 @@ enum PaperdollIcon : char
 	 0 Normal
 	 4 GM
 	 5 HGM
-	 6 Party
-	 9 GM_Party
-	10 HGM_Party
+	 6 Group
+	 9 GM_Group
+	10 HGM_Group
 }
 
 enum AvatarSlot : char
@@ -169,7 +173,7 @@ enum AvatarSlot : char
 	3 HairColor
 }
 
-enum TalkReply : short
+enum ChatReply : short
 {
 	1 NotFound
 }
@@ -295,7 +299,7 @@ enum SkillMasterReply : short
 	2 Wrong_Class
 }
 
-enum PartyRequestType : char
+enum GroupRequestType : char
 {
 	0 Join
 	1 Invite
@@ -468,7 +472,7 @@ struct Spell
 	short level
 }
 
-struct CharacterMapInfo
+struct PlayerRange
 {
 	string name
 	short id
@@ -492,7 +496,7 @@ struct CharacterMapInfo
 	break
 }
 
-struct NPCMapInfo
+struct NpcRange
 {
 	char index
 	short id
@@ -538,8 +542,8 @@ struct NearbyInfo
 {
 	char num_characters
 	break
-	struct CharacterMapInfo characters[num_characters]
-	struct NPCMapInfo npcs[]
+	struct PlayerRange characters[num_characters]
+	struct NpcRange npcs[]
 	break
 	struct ItemMapInfo items[]
 }
@@ -668,10 +672,10 @@ server_packet(Init, Init)
 }
 
 
-// --- Connection
+// --- Security
 
 "Confirm initialization data"
-client_packet(Connection, Accept)
+client_packet(Security, Accept)
 {
 	short encode_multiple
 	short encode_multiple
@@ -679,13 +683,13 @@ client_packet(Connection, Accept)
 }
 
 "Ping reply"
-client_packet(Connection, Ping)
+client_packet(Security, Ping)
 {
 	raw_string k // "k"
 }
 
 "Ping request"
-server_packet(Connection, Player)
+server_packet(Security, Player)
 {
 	short seq1
 	char seq2
@@ -858,7 +862,7 @@ server_packet(Login, Reply)
 }
 
 
-// --- Welcome
+// --- Play
 
 struct ServerSettings
 {
@@ -872,27 +876,27 @@ struct ServerSettings
 	short hgm_flood_rate
 }
 
-enum WelcomeCode : short
+enum PlayCode : short
 {
 	1 SelectCharacter
 	2 EnterGame
 }
 
 "Selected a character"
-client_packet(Welcome, Request)
+client_packet(Play, Request)
 {
 	int character_id
 }
 
 "Entering game"
-client_packet(Welcome, Msg)
+client_packet(Play, Msg)
 {
 	three session_id
 	int character_id
 }
 
 "Requesting a file"
-client_packet(Welcome, Agree)
+client_packet(Play, Agree)
 {
 	FileType file_type
 	short session_id
@@ -922,11 +926,11 @@ client_packet(Welcome, Agree)
 }
 
 "Reply to selecting a character / entering game"
-server_packet(Welcome, Reply)
+server_packet(Play, Reply)
 {
-	WelcomeCode welcome_code
+	PlayCode play_code
 
-	union(welcome_code)
+	union(play_code)
 	{
 		SelectCharacter: select_character
 		{
@@ -976,7 +980,7 @@ server_packet(Welcome, Reply)
 }
 
 
-// --- AdminInteract
+// --- Admin
 
 enum AdminMessageType : char
 {
@@ -995,20 +999,20 @@ struct CharacterStats4
 }
 
 "Talk to admin"
-client_packet(AdminInteract, Tell)
+client_packet(Admin, Tell)
 {
 	raw_string message
 }
 
 "Report character"
-client_packet(AdminInteract, Report)
+client_packet(Admin, Report)
 {
 	string reportee
 	raw_string message
 }
 
 "Incoming admin report"
-server_packet(AdminInteract, Reply)
+server_packet(Admin, Reply)
 {
 	AdminMessageType message_type
 	break
@@ -1031,19 +1035,19 @@ server_packet(AdminInteract, Reply)
 }
 
 "Nearby player disappearing (admin hide)"
-server_packet(AdminInteract, Remove)
+server_packet(Admin, Remove)
 {
 	short player_id
 }
 
 "Nearby player appearing (admin un-hide)"
-server_packet(AdminInteract, Agree)
+server_packet(Admin, Agree)
 {
 	short player_id
 }
 
 "Admin character inventory popup"
-server_packet(AdminInteract, List)
+server_packet(Admin, List)
 {
 	string name
 	int usage
@@ -1057,7 +1061,7 @@ server_packet(AdminInteract, List)
 }
 
 "Admin character info popup"
-server_packet(AdminInteract, Tell)
+server_packet(Admin, Tell)
 {
 	string name
 	int usage
@@ -1104,114 +1108,114 @@ client_packet(Global, Open)
 }
 
 
-// --- Talk
+// --- Chat
 
 "Guild chat message"
-client_packet(Talk, Request)
+client_packet(Chat, Request)
 {
 	raw_string message
 }
 
-"Party chat message"
-client_packet(Talk, Open)
+"Group chat message"
+client_packet(Chat, Open)
 {
 	raw_string message
 }
 
 "Global chat message"
-client_packet(Talk, Msg)
+client_packet(Chat, Msg)
 {
 	raw_string message
 }
 
 "Private chat message"
-client_packet(Talk, Tell)
+client_packet(Chat, Tell)
 {
 	string name
 	raw_string message
 }
 
 "Public chat message"
-client_packet(Talk, Report)
+client_packet(Chat, Report)
 {
 	raw_string message
 }
 
 "Admin chat message"
-client_packet(Talk, Admin)
+client_packet(Chat, Admin)
 {
 	raw_string message
 }
 
 "Admin announcement"
-client_packet(Talk, Announce)
+client_packet(Chat, Announce)
 {
 	raw_string message
 }
 
 "Guild chat message"
-server_packet(Talk, Request)
+server_packet(Chat, Request)
 {
 	string player_name
 	string message
 }
 
-"Party chat message"
-server_packet(Talk, Open)
+"Group chat message"
+server_packet(Chat, Open)
 {
 	short player_id
 	string message
 }
 
 "Global chat message"
-server_packet(Talk, Msg)
+server_packet(Chat, Msg)
 {
 	string player_name
 	string message
 }
 
 "Private chat message"
-server_packet(Talk, Tell)
+server_packet(Chat, Tell)
 {
 	string player_name
 	string message
 }
 
 "Public chat message"
-server_packet(Talk, Player)
+server_packet(Chat, Player)
 {
 	short player_id
 	string message
 }
 
 "Admin chat message"
-server_packet(Talk, Admin)
+server_packet(Chat, Admin)
 {
 	string player_name
 	string message
 }
 
 "Admin announcement"
-server_packet(Talk, Announce)
+server_packet(Chat, Announce)
 {
 	string player_name
 	string message
 }
 
 "Server message"
-client_packet(Talk, Server)
+client_packet(Chat, Server)
 {
 	raw_string message
 }
 
 "Status bar message"
-client_packet(Message, Open)
+client_packet(System, Open)
 {
 	raw_string message
 }
 
 "Temporary mute applied"
-server_packet(Talk, Spec)
+server_packet(Chat, Spec)
 {
 	string admin_name
 }
@@ -1245,10 +1249,10 @@ server_packet(Attack, Reply)
 }
 
 
-// --- Chair
+// --- Sit
 
 "Sitting on a chair"
-client_packet(Chair, Request)
+client_packet(Sit, Request)
 {
 	SitAction sit_action
 	struct Coords coords
@@ -1256,33 +1260,6 @@ client_packet(Chair, Request)
 }
 
 "Nearby player sitting on a chair"
-server_packet(Chair, Player)
-{
-	short player_id
-	struct Coords coords
-	Direction direction
-	char = 0
-}
-
-"Your character sitting on a chair"
-server_packet(Chair, Reply)
-{
-	short player_id
-	struct Coords coords
-	Direction direction
-	char = 0
-}
-
-
-// --- Sit
-
-"Floor sit/stand request"
-client_packet(Sit, Request)
-{
-	SitAction sit_action
-}
-
-"Nearby player sitting down"
 server_packet(Sit, Player)
 {
 	short player_id
@@ -1291,22 +1268,49 @@ server_packet(Sit, Player)
 	char = 0
 }
 
+"Your character sitting on a chair"
+server_packet(Sit, Reply)
+{
+	short player_id
+	struct Coords coords
+	Direction direction
+	char = 0
+}
+
+
+// --- Rest
+
+"Floor sit/stand request"
+client_packet(Rest, Request)
+{
+	SitAction sit_action
+}
+
+"Nearby player sitting down"
+server_packet(Rest, Player)
+{
+	short player_id
+	struct Coords coords
+	Direction direction
+	char = 0
+}
+
 "Your character standing up"
-server_packet(Sit, Close)
+server_packet(Rest, Close)
 {
 	short player_id
 	struct Coords coords
 }
 
 "Nearby player standing up"
-server_packet(Sit, Remove)
+server_packet(Rest, Remove)
 {
 	short player_id
 	struct Coords coords
 }
 
 "Your character sitting down"
-server_packet(Sit, Reply)
+server_packet(Rest, Reply)
 {
 	short player_id
 	struct Coords coords
@@ -1338,25 +1342,25 @@ client_packet(Effect, Player)
 }
 
 
-// --- Face
+// --- Direction
 
 "Facing a direction"
-client_packet(Face, Player)
+client_packet(Direction, Player)
 {
 	Direction direction
 }
 
 "Nearby player facing a direction"
-server_packet(Face, Player)
+server_packet(Direction, Player)
 {
 	short player_id
 	Direction direction
 }
 
 
-// --- Walk
+// --- Move
 
-struct WalkCommon
+struct MoveCommon
 {
 	Direction direction
 	three timestamp
@@ -1364,26 +1368,26 @@ struct WalkCommon
 
 }
 
-"Walking with #nowall"
-client_packet(Walk, Admin)
+"Moving with #nowall"
+client_packet(Move, Admin)
 {
-	struct WalkCommon walk
+	struct MoveCommon move
 }
 
-"Walking through a player"
-client_packet(Walk, Spec)
+"Moving through a player"
+client_packet(Move, Spec)
 {
-	struct WalkCommon walk
+	struct MoveCommon move
 }
 
-"Walking"
-client_packet(Walk, Player)
+"Moving"
+client_packet(Move, Player)
 {
-	struct WalkCommon walk
+	struct MoveCommon move
 }
 
 "Nearby player has disappeared from view"
-server_packet(Avatar, Remove)
+server_packet(Player, Remove)
 {
 	short player_id
 
@@ -1395,12 +1399,12 @@ server_packet(Avatar, Remove)
 server_packet(Players, Agree)
 {
 	break
-	struct CharacterMapInfo character
+	struct PlayerRange character
 	char = 1
 }
 
-"Nearby player has walked"
-server_packet(Walk, Player)
+"Nearby player has moved"
+server_packet(Move, Player)
 {
 	short player_id
 	Direction direction
@@ -1408,7 +1412,7 @@ server_packet(Walk, Player)
 }
 
 "Players, NPCs, and Items appearing in nearby view"
-server_packet(Walk, Reply)
+server_packet(Move, Reply)
 {
 	short player_ids[]
 	break
@@ -1420,7 +1424,7 @@ server_packet(Walk, Reply)
 
 // --- Bank
 
-"Talked to a banker NPC"
+"Request to interact with a banker NPC"
 client_packet(Bank, Open)
 {
 	short npc_id
@@ -1512,16 +1516,16 @@ server_packet(Locker, Buy)
 }
 
 
-// --- Citizen
+// --- Inn
 
 "Sleeping at an inn"
-client_packet(Citizen, Request)
+client_packet(Inn, Request)
 {
 	// TODO: EOSERV doesn't implement this
 }
 
 "Subscribing to a town"
-client_packet(Citizen, Reply)
+client_packet(Inn, Reply)
 {
 	// Check me: Not sure what these 2 break bytes are
 	short session_id
@@ -1534,32 +1538,32 @@ client_packet(Citizen, Reply)
 }
 
 "Giving up citizenship of a town"
-client_packet(Citizen, Remove)
+client_packet(Inn, Remove)
 {
 	// Check me: Not sure if this is the session ID or if there's any proceeding data
 	short session_id
 }
 
-"Talking to a citizenship NPC"
-client_packet(Citizen, Open)
+"Request to interact with an inn keeper"
+client_packet(Inn, Open)
 {
 	short npc_index
 }
 
 "Response to subscribing to a town"
-server_packet(Citizen, Reply)
+server_packet(Inn, Reply)
 {
 	char questions_wrong
 }
 
 "Response to giving up citizenship of a town"
-client_packet(Citizen, Remove)
+client_packet(Inn, Remove)
 {
 	InnUnsubscribeReply reply_code
 }
 
 "Response to to a citizenship NPC"
-client_packet(Citizen, Open)
+client_packet(Inn, Open)
 {
 	three vendor_id
 	char current_home_id
@@ -1610,7 +1614,7 @@ client_packet(Shop, Sell)
 	int session_id
 }
 
-"Talking to a shop NPC"
+"Request to view an NPCs shop"
 client_packet(Shop, Open)
 {
 	short npc_index
@@ -1640,7 +1644,7 @@ server_packet(Shop, Sell)
 	struct Weight weight
 }
 
-"Response from talking to a shop NPC"
+"Open shop NPC interface"
 server_packet(Shop, Open)
 {
 	short session_id
@@ -1652,7 +1656,7 @@ server_packet(Shop, Open)
 }
 
 
-// --- StatSkill
+// --- Skill
 
 struct CharacterBaseStats
 {
@@ -1720,21 +1724,21 @@ struct SkillLearn
 	struct CharacterBaseStats stat_req
 }
 
-"Talking to a skill master NPC" 
-client_packet(StatSkill, Open)
+"Request to interact with a skill master NPC"
+client_packet(Skill, Open)
 {
 	short npc_index
 }
 
-"Learning a skill from a skill master" 
-client_packet(StatSkill, Take)
+"Learning a skill from a skill master"
+client_packet(Skill, Take)
 {
 	int session_id
 	short spell_id
 }
 
-"Forgetting a skill at a skill master" 
-client_packet(StatSkill, Remove)
+"Forgetting a skill at a skill master"
+client_packet(Skill, Remove)
 {
 	int session_id
 	short spell_id
@@ -1750,8 +1754,8 @@ enum StatId : short
 	6 Cha
 }
 
-"Spending a stat point on a stat or skill" 
-client_packet(StatSkill, Add)
+"Spending a stat point on a stat or skill"
+client_packet(Skill, Add)
 {
 	TrainType action_type
 
@@ -1769,13 +1773,13 @@ client_packet(StatSkill, Add)
 }
 
 "Resetting stats at a skill master"
-client_packet(StatSkill, Junk)
+client_packet(Skill, Junk)
 {
 	int session_id
 }
 
-"Response from talking to a skill master NPC" 
-server_packet(StatSkill, Open)
+"Open skill master NPC interface"
+server_packet(Skill, Open)
 {
 	short session_id
 	string shop_name
@@ -1783,7 +1787,7 @@ server_packet(StatSkill, Open)
 }
 
 "Response to attempting to learn a skill from a skill master"
-server_packet(StatSkill, Reply)
+server_packet(Skill, Reply)
 {
 	SkillMasterReply reply_code
 
@@ -1813,27 +1817,27 @@ server_packet(StatSkill, Reply)
 }
 
 "Response to forgetting a skill at a skill master"
-server_packet(StatSkill, Remove)
+server_packet(Skill, Remove)
 {
 	short spell_id
 }
 
 "Response to spending stat points"
-server_packet(StatSkill, Player)
+server_packet(Skill, Player)
 {
 	short stat_points
 	struct CharacterStats3 stats
 }
 
 "Response to spending skill points"
-server_packet(StatSkill, Accept)
+server_packet(Skill, Accept)
 {
 	short skill_points
 	struct Spell spell
 }
 
 "Response to resetting character"
-server_packet(StatSkill, Junk)
+server_packet(Skill, Junk)
 {
 	struct CharacterStats1 stats
 }
@@ -1972,7 +1976,7 @@ server_packet(Item, Get)
 
 // --- Barber
 
-"Talking to barber NPC"
+"Request to interact with a barber NPC"
 client_packet(Barber, Open)
 {
 	short npc_index
@@ -1984,7 +1988,7 @@ client_packet(Barber, Buy)
 	short npc_index
 }
 
-"Reply from talking to barber NPC"
+"Open barber NPC interface"
 server_packet(Barber, Open)
 {
 	int session_id
@@ -2054,16 +2058,16 @@ server_packet(Board, Open)
 }
 
 
-// --- Jukebox
+// --- Music
 
 "Opening the jukebox listing"
-client_packet(Jukebox, Open)
+client_packet(Music, Open)
 {
 	struct Coords coords
 }
 
 "Requesting a song on a jukebox"
-client_packet(Jukebox, Msg)
+client_packet(Music, Msg)
 {
 	break
 	break
@@ -2071,33 +2075,33 @@ client_packet(Jukebox, Msg)
 }
 
 "Playing a note with the bard skill"
-client_packet(Jukebox, Use)
+client_packet(Music, Use)
 {
 	char instrument_id
 	char note_id
 }
 
 "Reply to successfully requesting a song"
-server_packet(Jukebox, Agree)
+server_packet(Music, Agree)
 {
 	int gold_amount
 }
 
 "Reply to unsuccessfully requesting a song"
-server_packet(Jukebox, Use)
+server_packet(Music, Use)
 {
 	short track_id
 }
 
 "Reply to opening the jukebox listing"
-server_packet(Jukebox, Open)
+server_packet(Music, Open)
 {
 	short map_id
 	string jukebox_player
 }
 
 "Someone playing a note with the bard skill nearby"
-server_packet(Jukebox, Msg)
+server_packet(Music, Msg)
 {
 	short player_id
 	Direction direction
@@ -2106,30 +2110,30 @@ server_packet(Jukebox, Msg)
 }
 
 "Play background music"
-server_packet(Jukebox, Player)
+server_packet(Music, Player)
 {
         char mfx_id
 }
 
 
-// --- Warp
+// --- Map
 
 "Accept a warp request from the server"
-client_packet(Warp, Accept)
+client_packet(Map, Accept)
 {
 	short map_id
 	short session_id
 }
 
 "Request to download a copy of the map"
-client_packet(Warp, Take)
+client_packet(Map, Take)
 {
 	short map_id
 	short session_id
 }
 
 "Warp request from server"
-server_packet(Warp, Request)
+server_packet(Map, Request)
 {
 	WarpType warp_type
 	short map_id
@@ -2147,7 +2151,7 @@ server_packet(Warp, Request)
 }
 
 "Reply after accepting a warp"
-server_packet(Warp, Agree)
+server_packet(Map, Agree)
 {
 	WarpType warp_type
 	union(warp_type)
@@ -2221,7 +2225,7 @@ client_packet(Paperdoll, Agree)
 }
 
 "Nearby player changed clothes"
-client_packet(Avatar, Agree)
+client_packet(Player, Agree)
 {
 	struct AvatarChange change
 }
@@ -2245,16 +2249,16 @@ server_packet(Book, Reply)
 }
 
 
-// --- Message
+// --- System
 
 "#ping command request"
-client_packet(Message, Ping)
+client_packet(System, Ping)
 {
 	short something
 }
 
 "#ping command reply"
-server_packet(Message, Pong)
+server_packet(System, Pong)
 {
 	short something
 }
@@ -2381,41 +2385,41 @@ server_packet(Refresh, Reply)
 	struct NearbyInfo nearby
 }
 
-// --- MapInfo
-"Requesting MapInfo about nearby characters and/or npcs"
-client_packet(MapInfo, Request)
+// --- Range
+"Requesting Range about nearby characters and/or npcs"
+client_packet(Range, Request)
 {
 	short player_ids[] // can ommit if only requesting npcs
 	break              // can ommit if only requesting players
 	char npc_indexes[] // can ommit if only requesting players
 }
 
-"Requesting MapInfo about a character"
-client_packet(CharacterMapInfo, Request)
+"Requesting Range about a character"
+client_packet(PlayerRange, Request)
 {
 	short player_ids[] // reads to end
 }
 
-"Requesting MapInfo about a npc"
-client_packet(NPCMapInfo, Request)
+"Requesting Range about a npc"
+client_packet(NpcRange, Request)
 {
 	char num_npcs // game server ignores this
 	break
 	char npc_indexes[] // reads to end
 }
 
-"MapInfo for characters and/or npcs"
-server_packet(MapInfo, Reply)
+"Range for characters and/or npcs"
+server_packet(Range, Reply)
 {
 	char num_entities
 	break // omitted if not sending back characters
-	struct CharacterMapInfo characters[num_entities] // omitted if not sending back characters
-	struct NPCMapInfo npcs[] // reads to end
+	struct PlayerRange characters[num_entities] // omitted if not sending back characters
+	struct NpcRange npcs[] // reads to end
 }
 
-// --- Party
+// --- Group
 
-struct PartyMember
+struct GroupMember
 {
 	short player_id
 	char leader
@@ -2425,78 +2429,78 @@ struct PartyMember
 }
 
 "Send party invite / join request"
-client_packet(Party, Request)
+client_packet(Group, Request)
 {
-	PartyRequestType request_type
+	GroupRequestType request_type
 	short player_id
 }
 
 "Accept party invite / join request"
-client_packet(Party, Accept)
+client_packet(Group, Accept)
 {
-	PartyRequestType request_type
+	GroupRequestType request_type
 	short player_id
 }
 
 "Remove player from a party"
-client_packet(Party, Remove)
+client_packet(Group, Remove)
 {
 	short player_id
 }
 
 "Request updated party info"
-client_packet(Party, Take)
+client_packet(Group, Take)
 {
 	// empty
 }
 
 "Received party invite / join request"
-server_packet(Party, Request)
+server_packet(Group, Request)
 {
-	PartyRequestType request_type
+	GroupRequestType request_type
 	short player_id
 	raw_string player_name
 }
 
 "Member list recieved when party is first joined"
-server_packet(Party, Create)
+server_packet(Group, Create)
 {
-	struct PartyMember members[]
+	struct GroupMember members[]
 }
 
 "New player joined the party"
-server_packet(Party, Add)
+server_packet(Group, Add)
 {
-	struct PartyMember member
+	struct GroupMember member
 }
 
 "Player left the party"
-server_packet(Party, Remove)
+server_packet(Group, Remove)
 {
 	short player_id
 }
 
 "Left / disbanded a party"
-server_packet(Party, Close)
+server_packet(Group, Close)
 {
 	break
 }
 
-"Party member list update"
-server_packet(Party, List)
+"Group member list update"
+server_packet(Group, List)
 {
-	struct PartyMember members[]
+	struct GroupMember members[]
 }
 
 "Update party member's HP"
-server_packet(Party, Agree)
+server_packet(Group, Agree)
 {
 	short player_id
 	char hp_pct
 }
 
 "Experience gained from party"
-server_packet(Party, Target_Group)
+server_packet(Group, Target_Group)
 {
 	short player_id
 	int experience
@@ -2619,7 +2623,7 @@ client_packet(Guild, Buy)
 	int gold_amount
 }
 
-"Talking to a guild master NPC"
+"Request to interact with a guild master"
 client_packet(Guild, Open)
 {
 	short npc_index
@@ -2727,7 +2731,7 @@ server_packet(Guild, Buy)
 	int gold_amount
 }
 
-"Talk to guild master NPC reply"
+"Open guild master NPC interface"
 server_packet(Guild, Open)
 {
 	three session_id
@@ -2767,10 +2771,10 @@ server_packet(Guild, Agree)
 }
 
 
-// --- Spell
+// --- Magic
 
 "Begin spell chanting"
-client_packet(Spell, Request)
+client_packet(Magic, Request)
 {
 	short spell_id
 	three timestamp
@@ -2780,7 +2784,7 @@ client_packet(Spell, Request)
 // Probably 0=self, 1=player, 2=npc
 
 "Self-targeted spell cast"
-client_packet(Spell, Target_Self)
+client_packet(Magic, Target_Self)
 {
 	char target_type
 	short spell_id
@@ -2788,7 +2792,7 @@ client_packet(Spell, Target_Self)
 }
 
 "Targeted spell cast"
-client_packet(Spell, Target_Other)
+client_packet(Magic, Target_Other)
 {
 	char target_type
 	// TODO: Find out what these are
@@ -2799,25 +2803,25 @@ client_packet(Spell, Target_Other)
 }
 
 "Group spell cast"
-client_packet(Spell, Target_Group)
+client_packet(Magic, Target_Group)
 {
 	short spell_id
 	three timestamp
 }
 
 "Nearby player chanting a spell"
-server_packet(Spell, Request)
+server_packet(Magic, Request)
 {
 	short player_id
 	short spell_id
 }
 
 "Nearby player self-casted a spell"
-server_packet(Spell, Target_Self)
+server_packet(Magic, Target_Self)
 {
 	short player_id
 	short spell_id
-	int spell_heal_hp
+	int Magic_heal_hp
 	char hp_pct
 
 	// TODO: Represent optionally present data
@@ -2827,7 +2831,7 @@ server_packet(Spell, Target_Self)
 }
 
 "Nearby player hit by a spell from a player"
-server_packet(Avatar, Admin)
+server_packet(Player, Admin)
 {
 	short caster_id
 	short victim_id
@@ -2851,7 +2855,7 @@ struct GroupHealTargetPlayer
 }
 
 "Nearby player(s) hit by a group spell from a player"
-server_packet(Spell, Target_Group)
+server_packet(Magic, Target_Group)
 {
 	short spell_id
 	short caster_id
@@ -2988,7 +2992,7 @@ server_packet(NPC, Reply)
 }
 
 "Nearby NPC hit by a spell from a player"
-server_packet(Cast, Reply)
+server_packet(MagicNpc, Reply)
 {
 	short spell_id
 	short player_id
@@ -3029,7 +3033,7 @@ server_packet(NPC, Accept)
 }
 
 "Nearby NPC killed by player spell"
-server_packet(Cast, Spec)
+server_packet(MagicNpc, Spec)
 {
 	short spell_id
 	short killer_id
@@ -3044,8 +3048,8 @@ server_packet(Cast, Spec)
 	int experience
 }
 
-"Nearby NPC killed by player spell and you levelled up"
-server_packet(Cast, Accept)
+"Nearby NPC killed by player spell and you leveled up"
+server_packet(MagicNpc, Accept)
 {
 	short spell_id
 	short killer_id
@@ -3130,7 +3134,7 @@ struct DialogEntry
 	string line
 }
 
-"Talking to a quest NPC"
+"Request to interact with quest NPC"
 client_packet(Quest, Use)
 {
 	short npc_index
@@ -3263,21 +3267,21 @@ struct MapDrainDamageOther
 }
 
 "HP/TP update"
-server_packet(Recover, Player)
+server_packet(GameBar, Player)
 {
 	short hp
 	short tp
 }
 
 "Stats update"
-server_packet(Recover, List)
+server_packet(GameBar, List)
 {
 	short class_id
 	struct CharacterStats3 stats
 }
 
 "Karma/experience update"
-server_packet(Recover, Reply)
+server_packet(GameBar, Reply)
 {
 	int experience
 	short karma
@@ -3350,7 +3354,7 @@ server_packet(Effect, Admin)
 }
 
 "Sound effect"
-server_packet(Music, Player)
+server_packet(Sound, Player)
 {
 	char sound_id
 }
