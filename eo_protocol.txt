@@ -94,11 +94,11 @@ enum PacketAction : byte
 	34 Talk
 	35 Swap
 	220 Config
-	240 Syn1
-	241 Syn2
-	242 Syn3
-	243 Syn4
-	244 Syn5
+	240 Sync1
+	241 Sync2
+	242 Sync3
+	243 Sync4
+	244 Sync5
 	250 Err
 	255 Init
 }
@@ -178,6 +178,8 @@ enum AvatarSlot : char
 	1 Clothes
 	2 Hair
 	3 HairColor
+	4 Skin
+	5 Gender
 }
 
 enum ChatResult : short
@@ -542,6 +544,16 @@ struct AvatarChange
 		{
 			char color
 		}
+
+		Skin: skin
+		{
+			Skin skin
+		}
+
+		Gender: gender
+		{
+			Gender gender
+		}
 	}
 }
 
@@ -690,7 +702,7 @@ client_packet(Security, Confirm)
 }
 
 "Ping result"
-client_packet(Security, Syn1)
+client_packet(Security, Sync1)
 {
 	raw_string k // "k"
 }
@@ -738,7 +750,7 @@ client_packet(Account, Update)
 	string newpassword
 }
 
-"Result to client Account-family packets"
+"Result of client Account-family packets"
 server_packet(Account, Result)
 {
 	AccountResult result_code
@@ -752,6 +764,12 @@ server_packet(Account, Result)
 	{
 		return eo_short(result_code);
 	}
+}
+
+"Set account creation wait timer (values accepted: 10 - 600 seconds)"
+server_packet(Account, Config)
+{
+	short timer
 }
 
 
@@ -868,6 +886,13 @@ server_packet(Login, Result)
 	}
 }
 
+"Control max number of skins and hairstyles for character creation"
+server_packet(Login, Config)
+{
+	short max_skins
+	short max_hairstyles
+}
+
 
 // --- Play
 
@@ -932,7 +957,7 @@ client_packet(Play, Update)
 	}
 }
 
-"Result to selecting a character / entering game"
+"Result of selecting a character / entering game"
 server_packet(Play, Result)
 {
 	PlayCode play_code
@@ -1867,6 +1892,14 @@ client_packet(Item, Do)
 	short use_item_id
 }
 
+"Requesting a new title"
+client_packet(Item, Public)
+{
+	short used_item_id
+	break
+	raw_string title
+}
+
 "Dropping items on the ground"
 client_packet(Item, Drop)
 {
@@ -1887,7 +1920,7 @@ client_packet(Item, Pickup)
 	short take_item_index
 }
 
-"Result to using an item"
+"Result of using an item"
 server_packet(Item, Result)
 {
 	ItemType used_item_type
@@ -1931,7 +1964,7 @@ server_packet(Item, Result)
 	}
 }
 
-"Result to dropping items on the ground"
+"Result of dropping items on the ground"
 server_packet(Item, Drop)
 {
 	struct ShortItem dropped_item
@@ -1950,7 +1983,7 @@ server_packet(Item, Add)
 	struct Coords coords
 }
 
-"Result to junking items"
+"Result of junking items"
 server_packet(Item, Junk)
 {
 	struct ShortItem junked_item
@@ -1958,7 +1991,7 @@ server_packet(Item, Junk)
 	struct Weight weight
 }
 
-"Result to taking items from the ground"
+"Result of taking items from the ground"
 server_packet(Item, Pickup)
 {
 	short taken_item_index
@@ -1999,6 +2032,10 @@ client_packet(Barber, Buy)
 server_packet(Barber, Open)
 {
 	int session_id
+	// TODO: represent optionally present data
+	short max_hairstyles
+	short base_price
+	short price_per_level
 }
 
 "Result from purchasing a hair-style"
@@ -2048,14 +2085,14 @@ client_packet(Board, Open)
 	short board_id
 }
 
-"Result to reading a post on a town board"
+"Result of reading a post on a town board"
 server_packet(Board, Set)
 {
 	short post_id
 	string post_body
 }
 
-"Result to opening a town board"
+"Result of opening a town board"
 server_packet(Board, Open)
 {
 	char board_id
@@ -2088,19 +2125,19 @@ client_packet(Music, Do)
 	char note_id
 }
 
-"Result to successfully requesting a song"
+"Result of successfully requesting a song"
 server_packet(Music, Update)
 {
 	int gold_amount
 }
 
-"Result to unsuccessfully requesting a song"
+"Result of unsuccessfully requesting a song"
 server_packet(Music, Do)
 {
 	short track_id
 }
 
-"Result to opening the jukebox listing"
+"Result of opening the jukebox listing"
 server_packet(Music, Open)
 {
 	short map_id
@@ -2209,7 +2246,7 @@ client_packet(Paperdoll, Add)
 	char sub_loc
 }
 
-"Result to requesting a paperdoll"
+"Result of requesting a paperdoll"
 server_packet(Paperdoll, Result)
 {
 	struct Paperdoll_Info info
@@ -2217,22 +2254,34 @@ server_packet(Paperdoll, Result)
 	PaperdollIcon paperdoll_icon
 }
 
-"Result to unequipping an item"
-client_packet(Paperdoll, Delete)
+"Result of unequipping an item"
+server_packet(Paperdoll, Delete)
 {
 	struct AvatarChange change
 	struct ItemCharacterStats stats
 }
 
-"Result to equipping an item"
-client_packet(Paperdoll, Update)
+"Result of equipping an item"
+server_packet(Paperdoll, Update)
 {
 	struct AvatarChange change
 	struct ItemCharacterStats stats
 }
 
-"Nearby player changed clothes"
-client_packet(Player, Update)
+"Result of swapping an item"
+server_packet(Paperdoll, Swap)
+{
+	struct AvatarChange change
+	short equipped_item_id
+	three equipped_item_amount
+	char equipped_item_slot
+	short swapped_item_id
+	three swapped_item_amount
+	struct ItemCharacterStats stats
+}
+
+"Nearby player avatar updated"
+server_packet(Player, Update)
 {
 	struct AvatarChange change
 }
@@ -2246,7 +2295,7 @@ client_packet(Book, Request)
 	short player_id
 }
 
-"Result to requesting a book"
+"Result of requesting a book"
 server_packet(Book, Result)
 {
 	struct Paperdoll_Info info
@@ -2259,13 +2308,13 @@ server_packet(Book, Result)
 // --- System
 
 "#ping command request"
-client_packet(System, Syn1)
+client_packet(System, Sync1)
 {
 	short something
 }
 
 "#ping command result"
-server_packet(System, Syn2)
+server_packet(System, Sync2)
 {
 	short something
 }
@@ -2292,19 +2341,19 @@ client_packet(Players, List)
 }
 
 "#find command result - offline"
-server_packet(Players, Syn1)
+server_packet(Players, Sync1)
 {
 	raw_string name
 }
 
 "#find command result - same map"
-server_packet(Players, Syn2)
+server_packet(Players, Sync2)
 {
 	raw_string name
 }
 
 "#find command result - different map"
-server_packet(Players, Syn3)
+server_packet(Players, Sync3)
 {
 	raw_string name
 }
@@ -2348,14 +2397,14 @@ client_packet(Chest, Get)
 	short take_item_id
 }
 
-"Result to opening a chest"
+"Result of opening a chest"
 server_packet(Chest, Open)
 {
 	struct Coords coords
 	struct ShortItem items[]
 }
 
-"Result to placing an item in to a chest"
+"Result of placing an item in to a chest"
 server_packet(Chest, Result)
 {
 	struct Item added_item
@@ -2363,7 +2412,7 @@ server_packet(Chest, Result)
 	struct ShortItem items[]
 }
 
-"Result to removing an item from a chest"
+"Result of removing an item from a chest"
 server_packet(Chest, Pickup)
 {
 	struct ShortItem taken_item
@@ -3111,6 +3160,18 @@ server_packet(NPC, Set)
 	break
 	struct NPCUpdateChat chat[]
 	break
+}
+
+// --- Boss
+
+"Synchronize boss health bar"
+server_packet(Boss, Sync1)
+{
+	short npc_index
+	short npc_id
+	three hp
+	char hp_pct
+	char killed
 }
 
 // --- Quest
