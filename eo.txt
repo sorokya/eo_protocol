@@ -49,6 +49,7 @@ enum PacketFamily : byte
 	49 Citizen
 	50 Quest
 	51 Book
+	52 Boss
 	255 Init
 }
 
@@ -86,6 +87,8 @@ enum PacketAction : byte
 	31 Target_Other
 	33 Target_Group
 	34 Dialog
+	35 Swap
+	220 Config
 	240 Ping
 	241 Pong
 	242 Net3
@@ -531,6 +534,16 @@ struct AvatarChange
 		{
 			char color
 		}
+
+		Skin: skin
+		{
+			Skin skin
+		}
+
+		Gender: gender
+		{
+			Gender gender
+		}
 	}
 }
 
@@ -743,6 +756,12 @@ server_packet(Account, Reply)
 	}
 }
 
+"Set account creation wait timer (values accepted: 10 - 600 seconds)"
+server_packet(Account, Config)
+{
+	short timer
+}
+
 
 // --- Character
 
@@ -855,6 +874,13 @@ server_packet(Login, Reply)
 			struct Character_List character_list
 		}
 	}
+}
+
+"Control max number of skins and hairstyles for character creation"
+server_packet(Login, Config)
+{
+	short max_skins
+	short max_hairstyles
 }
 
 
@@ -1856,6 +1882,14 @@ client_packet(Item, Use)
 	short use_item_id
 }
 
+"Requesting a new title"
+client_packet(Item, Report)
+{
+	short used_item_id
+	break
+	raw_string title
+}
+
 "Dropping items on the ground"
 client_packet(Item, Drop)
 {
@@ -1988,6 +2022,11 @@ client_packet(Barber, Buy)
 server_packet(Barber, Open)
 {
 	int session_id
+
+	// TODO: represent optionally present data
+	short max_hairstyles
+	short base_price
+	short price_per_level
 }
 
 "Reply from purchasing a hair-style"
@@ -2217,6 +2256,18 @@ client_packet(Paperdoll, Remove)
 client_packet(Paperdoll, Agree)
 {
 	struct AvatarChange change
+	struct ItemCharacterStats stats
+}
+
+"Result of swapping an item"
+server_packet(Paperdoll, Swap)
+{
+	struct AvatarChange change
+	short equipped_item_id
+	three equipped_item_amount
+	char equipped_item_slot
+	short swapped_item_id
+	three swapped_item_amount
 	struct ItemCharacterStats stats
 }
 
@@ -3101,6 +3152,20 @@ server_packet(NPC, Player)
 	struct NPCUpdateChat chat[]
 	break
 }
+
+
+// --- Boss
+
+"Synchronize boss health bar"
+server_packet(Boss, Ping)
+{
+	short npc_index
+	short npc_id
+	three hp
+	char hp_pct
+	char killed
+}
+
 
 // --- Quest
 
