@@ -427,7 +427,7 @@ struct TinyCoords
 	char y
 }
 
-Struct Coords
+struct Coords
 {
 	short x
 	short y
@@ -2191,7 +2191,7 @@ server_packet(Warp, Agree)
 	WarpType warp_type
 	union(warp_type)
 	{
-		MapSwitch: map switch
+		MapSwitch: map_switch
 		{
 			short map_id
 			WarpAnimation warp_anim
