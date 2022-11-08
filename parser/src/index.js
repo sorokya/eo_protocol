@@ -39,7 +39,7 @@ yargs(hideBin(process.argv))
     alias: 'd',
     type: 'string',
     description: 'directory to parse protocol files from',
-    default: path.join(__dirname, '../../v28')
+    default: path.join(__dirname, '../..')
   })
   .parse();
 
