@@ -1,0 +1,17 @@
+{
+  "name": "eo_protocol_parser",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sorokya/eo_protocol.git"
+  },
+  "license": "ISC",
+  "homepage": "https://github.com/sorokya/eo_protocol#readme",
+  "dependencies": {
+    "chevrotain": "^10.4.1",
+    "yargs": "^17.6.2"
+  }
+}
