@@ -3223,9 +3223,9 @@ server_packet(Arena, Use)
 "Arena kill message"
 server_packet(Arena, Spec)
 {
-	short = 0
+	short player_id
 	break
-	char = 0
+	Direction direction
 	break
 	int num_kills
 	break
