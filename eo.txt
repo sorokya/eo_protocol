@@ -1251,8 +1251,13 @@ server_packet(Attack, Reply)
 client_packet(Chair, Request)
 {
 	SitAction sit_action
-	struct Coords coords
-	// TODO: Check if coords only appear for sit actions
+	union(sit_action)
+	{
+		Sit: sit
+		{
+			struct TinyCoords coords
+		}
+	}
 }
 
 "Nearby player sitting on a chair"
@@ -1271,6 +1276,13 @@ server_packet(Chair, Reply)
 	struct Coords coords
 	Direction direction
 	char = 0
+}
+
+"Your character standing up from a chair"
+server_packet(Chair, Close)
+{
+	short player_id
+	struct Coords coords
 }
 
 
