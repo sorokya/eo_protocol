@@ -1478,7 +1478,7 @@ client_packet(Locker, Open)
 "Buying a locker space upgrade from a banker NPC"
 client_packet(Locker, Buy)
 {
-	// empty
+	char = 1
 }
 
 "Response to adding an item to a bank locker"
@@ -2250,13 +2250,13 @@ server_packet(Book, Reply)
 "#ping command request"
 client_packet(Message, Ping)
 {
-	short something
+	short = 2
 }
 
 "#ping command reply"
 server_packet(Message, Pong)
 {
-	short something
+	short = 2
 }
 
 
@@ -2271,13 +2271,13 @@ client_packet(Players, Accept)
 "Requesting a list of online players"
 client_packet(Players, List)
 {
-	// empty
+	break
 }
 
 "Requesting a list of online friends"
 client_packet(Players, List)
 {
-	// empty
+	break
 }
 
 "#find command reply - offline"
@@ -2372,7 +2372,7 @@ server_packet(Chest, Agree)
 "Requesting new info about nearby objects"
 client_packet(Refresh, Request)
 {
-	// empty
+	break
 }
 
 
@@ -3211,7 +3211,7 @@ server_packet(Item, Accept)
 "Arena is blocked message"
 server_packet(Arena, Drop)
 {
-	// empty
+	char = 'N'
 }
 
 "Arena start message"
