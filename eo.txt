@@ -1859,8 +1859,7 @@ client_packet(Item, Use)
 "Dropping items on the ground"
 client_packet(Item, Drop)
 {
-	// Official EO sends either 3 or 4 bytes for drop_item.amount
-	struct Item drop_item
+	struct ShortItem drop_item
 	struct Coords coords
 }
 
