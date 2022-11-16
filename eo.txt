@@ -1199,13 +1199,13 @@ server_packet(Talk, Announce)
 }
 
 "Server message"
-client_packet(Talk, Server)
+server_packet(Talk, Server)
 {
 	raw_string message
 }
 
 "Status bar message"
-client_packet(Message, Open)
+server_packet(Message, Open)
 {
 	raw_string message
 }
@@ -1323,15 +1323,15 @@ client_packet(Emote, Report)
 	Emote emote
 }
 
-"Nearby player an emote"
-client_packet(Emote, Player)
+"Nearby player doing an emote"
+server_packet(Emote, Player)
 {
 	short player_id
 	Emote emote
 }
 
 "Nearby player doing an effect"
-client_packet(Effect, Player)
+server_packet(Effect, Player)
 {
 	short player_id
 	three effect_id
@@ -2207,21 +2207,21 @@ server_packet(Paperdoll, Reply)
 }
 
 "Reply to unequipping an item"
-client_packet(Paperdoll, Remove)
+server_packet(Paperdoll, Remove)
 {
 	struct AvatarChange change
 	struct ItemCharacterStats stats
 }
 
 "Reply to equipping an item"
-client_packet(Paperdoll, Agree)
+server_packet(Paperdoll, Agree)
 {
 	struct AvatarChange change
 	struct ItemCharacterStats stats
 }
 
 "Nearby player changed clothes"
-client_packet(Avatar, Agree)
+server_packet(Avatar, Agree)
 {
 	struct AvatarChange change
 }
