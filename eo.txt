@@ -2447,7 +2447,7 @@ client_packet(Party, Remove)
 "Request updated party info"
 client_packet(Party, Take)
 {
-	// empty
+	char num_members
 }
 
 "Received party invite / join request"
