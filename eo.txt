@@ -782,7 +782,7 @@ client_packet(Character, Create)
 	short session_id
 	Gender:short gender
 	short hairstyle
-	short harcolor
+	short haircolor
 	Skin:short skin
 	break
 	string name
@@ -2169,10 +2169,10 @@ struct Paperdoll_Info
 	string name
 	string home
 	string partner
-	string tite
+	string title
 	string guild
 	string guild_rank
-	short player_Id
+	short player_id
 	char class_id
 	Gender gender
 	char = 0
@@ -2458,7 +2458,7 @@ server_packet(Party, Request)
 	raw_string player_name
 }
 
-"Member list recieved when party is first joined"
+"Member list received when party is first joined"
 server_packet(Party, Create)
 {
 	struct PartyMember members[]
@@ -3061,7 +3061,7 @@ server_packet(Cast, Accept)
 	struct LevelUpStats level_up
 }
 
-"Killing all boss chidren"
+"Killing all boss children"
 server_packet(NPC, Junk)
 {
 	short npc_id
