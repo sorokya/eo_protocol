@@ -230,7 +230,10 @@ enum InitReply : byte
 
 enum InitBanType : byte
 {
-	0 Temp
+	// The logic in the client is "permanent = ban_type >= 2", meaning 0 and 1 are both interpreted
+	// as temporary bans.
+	0 Temp0
+	1 Temp
 	2 Perm
 }
 
@@ -608,6 +611,11 @@ server_packet(Init, Init)
 
 			union(ban_type)
 			{
+				Temp0: ban_temp0
+				{
+					byte mins_remaining
+				}
+
 				Temp: ban_temp
 				{
 					byte mins_remaining
