@@ -1517,16 +1517,23 @@ server_packet(Locker, Buy)
 "Sleeping at an inn"
 client_packet(Citizen, Request)
 {
-	// TODO: EOSERV doesn't implement this
+	short session_id
+	short vendor_id
+}
+
+"Confirm sleeping at an inn"
+client_packet(Citizen, Accept)
+{
+	short session_id
+	short vendor_id
 }
 
 "Subscribing to a town"
 client_packet(Citizen, Reply)
 {
-	// Check me: Not sure what these 2 break bytes are
 	short session_id
 	break
-	short npc_id
+	short vendor_id
 	break
 	string answer1
 	string answer2
@@ -1536,7 +1543,6 @@ client_packet(Citizen, Reply)
 "Giving up citizenship of a town"
 client_packet(Citizen, Remove)
 {
-	// Check me: Not sure if this is the session ID or if there's any proceeding data
 	short session_id
 }
 
@@ -1553,13 +1559,13 @@ server_packet(Citizen, Reply)
 }
 
 "Response to giving up citizenship of a town"
-client_packet(Citizen, Remove)
+server_packet(Citizen, Remove)
 {
 	InnUnsubscribeReply reply_code
 }
 
-"Response to to a citizenship NPC"
-client_packet(Citizen, Open)
+"Response from talking to a citizenship NPC"
+server_packet(Citizen, Open)
 {
 	three vendor_id
 	char current_home_id
@@ -1570,7 +1576,11 @@ client_packet(Citizen, Open)
 	raw_string question3
 }
 
-// TODO: Server sleep packet
+"Sleeping at an inn"
+server_packet(Citizen, Accept)
+{
+	int gold_amount
+}
 
 
 // --- Shop
