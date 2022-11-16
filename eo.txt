@@ -1273,6 +1273,13 @@ server_packet(Chair, Reply)
 	char = 0
 }
 
+"Your character standing up from a chair"
+server_packet(Chair, Close)
+{
+	short player_id
+	struct Coords coords
+}
+
 
 // --- Sit
 
