@@ -2526,14 +2526,15 @@ client_packet(Guild, Request)
 {
 	int session_id
 	break
-	raw_string(3) guild_tag
+	string guild_tag
 	string guild_name
 }
 
 "Accept pending guild creation invite"
 client_packet(Guild, Accept)
 {
-	// empty
+	int = 20202
+	short player_id
 }
 
 "Leave guild"
@@ -2763,7 +2764,6 @@ server_packet(Guild, Agree)
 	string guild_tag
 	string guild_name
 	string rank_name
-	break
 }
 
 
