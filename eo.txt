@@ -1439,6 +1439,18 @@ server_packet(Walk, Reply)
 	struct ItemMapInfo items[]
 }
 
+"Your character has been frozen"
+server_packet(Walk, Close)
+{
+	char = 'f'
+}
+
+"Your character has been unfrozen"
+server_packet(Walk, Open)
+{
+	char = 'u'
+}
+
 
 // --- Bank
 
