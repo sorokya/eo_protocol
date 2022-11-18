@@ -308,7 +308,8 @@ enum CharacterReply : short
 {
 	1 Exists
 	2 Full
-	3 Not_Approved
+	3 Full3
+	4 Not_Approved
 	5 OK
 	6 Deleted
 }
@@ -320,6 +321,7 @@ enum AccountReply : short
 	3 Created
 	5 Change_Failed
 	6 Changed
+	7 RequestDenied
 }
 
 enum LoginReply : short
@@ -327,6 +329,7 @@ enum LoginReply : short
 	1 Wrong_User
 	2 Wrong_UserPass
 	3 OK
+	4 Banned
 	5 LoggedIn
 	6 Busy
 }
