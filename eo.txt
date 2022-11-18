@@ -1108,7 +1108,7 @@ client_packet(Global, Open)
 }
 
 "Closed global tab"
-client_packet(Global, Open)
+client_packet(Global, Close)
 {
 	char = 'n'
 }
@@ -1244,7 +1244,7 @@ server_packet(Attack, Player)
 }
 
 "Nearby player hit by another player"
-server_packet(Attack, Reply)
+server_packet(Avatar, Reply)
 {
 	short player_id
 	short victim_id
@@ -1455,7 +1455,7 @@ client_packet(Bank, Add)
 }
 
 "Withdrawing gold"
-client_packet(Bank, Add)
+client_packet(Bank, Take)
 {
 	int amount
 }
@@ -1985,14 +1985,14 @@ server_packet(Item, Get)
 }
 
 "Receive item (from quest)"
-server_packet(Item, Get)
+server_packet(Item, Obtain)
 {
 	struct ShortItem item
 	char cur_weight
 }
 
 "Lose item (from quest)"
-server_packet(Item, Get)
+server_packet(Item, Kick)
 {
 	struct Item item
 	char cur_weight
@@ -2298,7 +2298,7 @@ client_packet(Players, Accept)
 }
 
 "Requesting a list of online players"
-client_packet(Players, List)
+client_packet(Players, Request)
 {
 	// empty
 }
@@ -2745,7 +2745,7 @@ server_packet(Guild, Rank)
 }
 
 "Get guild bank reply"
-server_packet(Guild, Rank)
+server_packet(Guild, Sell)
 {
 	int gold_amount
 }
@@ -2973,7 +2973,7 @@ server_packet(Trade, Spec)
 }
 
 "Partner agree state updated"
-server_packet(Trade, Spec)
+server_packet(Trade, Agree)
 {
 	short player_id
 	char agree_state
@@ -3259,7 +3259,7 @@ server_packet(Arena, Spec)
 }
 
 "Arena win message"
-server_packet(Arena, Spec)
+server_packet(Arena, Accept)
 {
 	string winner_name
 	int num_kills
