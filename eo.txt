@@ -1030,13 +1030,13 @@ server_packet(AdminInteract, Reply)
 		{
 			string player_name
 			string message
-			string reportee_name
 		}
 
 		Report: report
 		{
 			string player_name
 			string message
+			string reportee_name
 		}
 	}
 }
@@ -1064,7 +1064,6 @@ server_packet(AdminInteract, List)
 	struct Item inventory[]
 	break
 	struct ShortItem bank[]
-	break
 }
 
 "Admin character info popup"
