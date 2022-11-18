@@ -2798,6 +2798,12 @@ server_packet(Guild, Agree)
 
 // --- Spell
 
+enum SpellTargetType : char
+{
+	1 Player
+	2 NPC
+}
+
 "Begin spell chanting"
 client_packet(Spell, Request)
 {
@@ -2805,13 +2811,10 @@ client_packet(Spell, Request)
 	three timestamp
 }
 
-// TODO: Need to find out target_type enum numbers
-// Probably 0=self, 1=player, 2=npc
-
 "Self-targeted spell cast"
 client_packet(Spell, Target_Self)
 {
-	char target_type
+	Direction direction
 	short spell_id
 	three timestamp
 }
@@ -2819,10 +2822,8 @@ client_packet(Spell, Target_Self)
 "Targeted spell cast"
 client_packet(Spell, Target_Other)
 {
-	char target_type
-	// TODO: Find out what these are
-	char = 0
-	short = 0
+	SpellTargetType target_type
+	three previous_timestamp
 	short spell_id
 	three timestamp
 }
@@ -2869,11 +2870,6 @@ server_packet(Avatar, Admin)
 
 struct GroupHealTargetPlayer
 {
-	break
-	break
-	break
-	break
-	break
 	short player_id
 	char hp_pct
 	short hp
