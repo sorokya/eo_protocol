@@ -1445,7 +1445,7 @@ server_packet(Walk, Reply)
 "Talked to a banker NPC"
 client_packet(Bank, Open)
 {
-	short npc_id
+	short npc_index
 }
 
 "Depositing gold"
