@@ -1785,6 +1785,7 @@ client_packet(StatSkill, Add)
 
 		Skill: skill
 		{
+			short spell_id
 		}
 	}
 }
@@ -1803,7 +1804,7 @@ server_packet(StatSkill, Open)
 	struct SkillLearn skills[]
 }
 
-"Response to attempting to learn a skill from a skill master"
+"Response from unsuccessful attempt to learn a skill from a skill master"
 server_packet(StatSkill, Reply)
 {
 	SkillMasterReply reply_code
@@ -1819,18 +1820,14 @@ server_packet(StatSkill, Reply)
 		{
 			short class_id
 		}
-
-		// FIXME: Add support for this to the parser
-		default: ok
-		{
-			int gold_amount
-		}
 	}
+}
 
-	fn eo_short spell_id() const
-	{
-		return eo_short(reply_code);
-	}
+"Response from learning a skill from a skill master" 
+server_packet(StatSkill, Take)
+{
+	short spell_id
+	int gold_amount
 }
 
 "Response to forgetting a skill at a skill master"
