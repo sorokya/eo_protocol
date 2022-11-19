@@ -496,6 +496,8 @@ struct CharacterMapInfo
 	struct Paperdoll_B000A0HSW paperdoll
 	SitState sit_state
 	char invisible
+	// TODO: Represent optionally present data
+	WarpAnimation animation
 	break
 }
 
@@ -1419,9 +1421,7 @@ server_packet(Avatar, Remove)
 "Player has appeared in nearby view"
 server_packet(Players, Agree)
 {
-	break
-	struct CharacterMapInfo character
-	char = 1
+	struct NearbyInfo nearby
 }
 
 "Nearby player has walked"
@@ -2453,6 +2453,7 @@ server_packet(Refresh, Reply)
 	struct NearbyInfo nearby
 }
 
+
 // --- Range
 "Requesting info about nearby players and/or npcs"
 client_packet(Range, Request)
@@ -2479,11 +2480,9 @@ client_packet(NPCRange, Request)
 "MapInfo for characters and/or npcs"
 server_packet(Range, Reply)
 {
-	char num_characters
-	break
-	struct CharacterMapInfo characters[num_characters]
-	struct NPCMapInfo npcs[]
+	struct NearbyInfo nearby
 }
+
 
 // --- Party
 
