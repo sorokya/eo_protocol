@@ -513,7 +513,7 @@ struct ItemMapInfo
 {
 	short uid
 	short id
-	struct Coords coords
+	struct TinyCoords coords
 	three amount
 }
 
