@@ -888,6 +888,8 @@ enum WelcomeCode : short
 {
 	1 SelectCharacter
 	2 EnterGame
+	3 ServerBusy
+	4 LoggedIn
 }
 
 "Selected a character"
