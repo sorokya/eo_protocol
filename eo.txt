@@ -24,9 +24,9 @@ enum PacketFamily : byte
 	24 Party
 	25 Refresh
 	26 NPC
-	27 CharacterMapInfo
-	28 NPCMapInfo
-	29 MapInfo
+	27 PlayerRange
+	28 NPCRange
+	29 Range
 	30 Paperdoll
 	31 Effect
 	32 Trade
@@ -2453,36 +2453,36 @@ server_packet(Refresh, Reply)
 	struct NearbyInfo nearby
 }
 
-// --- MapInfo
-"Requesting MapInfo about nearby characters and/or npcs"
-client_packet(MapInfo, Request)
+// --- Range
+"Requesting info about nearby players and/or npcs"
+client_packet(Range, Request)
 {
-	short player_ids[] // can ommit if only requesting npcs
-	break              // can ommit if only requesting players
-	char npc_indexes[] // can ommit if only requesting players
-}
-
-"Requesting MapInfo about a character"
-client_packet(CharacterMapInfo, Request)
-{
-	short player_ids[] // reads to end
-}
-
-"Requesting MapInfo about a npc"
-client_packet(NPCMapInfo, Request)
-{
-	char num_npcs // game server ignores this
+	short player_ids[]
 	break
-	char npc_indexes[] // reads to end
+	char npc_indexes[]
+}
+
+"Sent when unknown player has walked into view"
+client_packet(PlayerRange, Request)
+{
+	short player_ids[]
+}
+
+"Sent when unknown npc has walked into view"
+client_packet(NPCRange, Request)
+{
+	char num_npcs
+	break
+	char npc_indexes[]
 }
 
 "MapInfo for characters and/or npcs"
-server_packet(MapInfo, Reply)
+server_packet(Range, Reply)
 {
-	char num_entities
-	break // omitted if not sending back characters
-	struct CharacterMapInfo characters[num_entities] // omitted if not sending back characters
-	struct NPCMapInfo npcs[] // reads to end
+	char num_characters
+	break
+	struct CharacterMapInfo characters[num_characters]
+	struct NPCMapInfo npcs[]
 }
 
 // --- Party
