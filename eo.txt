@@ -1794,6 +1794,35 @@ enum StatId : short
 	6 Cha
 }
 
+enum MarriageRequestType : char
+{
+	1 MarriageApproval
+	2 Divorce
+}
+
+enum MarriageReply : short
+{
+	1 AlreadyMarried
+	2 NotMarried
+	3 Success
+	4 NotEnoughGold
+	5 WrongName
+	6 ServiceBusy
+	7 DivorceNotification
+}
+
+enum PriestReply : short
+{
+	1 NotDressed
+	2 LowLevel
+	3 PartnerNotPresent
+	4 PartnerNotDressed
+	5 Busy
+	6 DoYou
+	7 PartnerAlreadyMarried
+	8 NoPermission
+}
+
 "Spending a stat point on a stat or skill" 
 client_packet(StatSkill, Add)
 {
@@ -3280,7 +3309,89 @@ server_packet(Arena, Accept)
 }
 
 
-// --- TODO: Law / Priest packets
+// --- Marriage
+
+"Talking to a law NPC"
+client_packet(Marriage, Open)
+{
+	short npc_index
+}
+
+"Requesting marriage approval"
+client_packet(Marriage, Request)
+{
+	MarriageRequestType request_type
+	int session_id
+	break
+	raw_string name
+}
+
+"Response from talking to a law NPC"
+server_packet(Marriage, Open)
+{
+	three session_id
+}
+
+"Reply to client Marriage-family packets"
+server_packet(Marriage, Reply)
+{
+	MarriageReply reply_code
+	union(reply_code)
+	{
+		Success: success
+		{
+			int gold_amount
+		}
+	}
+}
+
+
+// --- Priest
+
+"Accepting a marriage request"
+client_packet(Priest, Accept)
+{
+	short session_id
+}
+
+"Talking to a priest NPC"
+client_packet(Priest, Open)
+{
+	int npc_index
+}
+
+"Requesting marriage at a priest"
+client_packet(Priest, Request)
+{
+	int session_id
+	break
+	string name
+}
+
+"Saying "I do" at a wedding"
+client_packet(Priest, Use)
+{
+	int session_id
+}
+
+"Response from talking to a priest NPC"
+server_packet(Priest, Open)
+{
+	int session_id
+}
+
+"Reply to client Priest-family packets"
+server_packet(Priest, Reply)
+{
+	PriestReply reply_code
+}
+
+"Wedding request"
+server_packet(Priest, Request)
+{
+	short session_id
+	string partner_name
+}
 
 
 // --- Misc.
