@@ -2568,7 +2568,7 @@ client_packet(Guild, Create)
 {
 	int session_id
 	break
-	raw_string(3) guild_tag
+	string guild_tag
 	string guild_name
 	string description
 }
@@ -2578,7 +2578,7 @@ client_packet(Guild, Player)
 {
 	int sesssion_id
 	break
-	raw_string(3) guild_tag
+	string guild_tag
 	string recruiter_name
 }
 
