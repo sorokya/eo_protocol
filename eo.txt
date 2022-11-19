@@ -152,9 +152,10 @@ enum Skin : char
 	6 Fish
 }
 
+"Shows on paperdoll and online player list. Official server/client doesn't support Guide or Guardian icons"
 enum PaperdollIcon : char
 {
-	 0 Normal
+	 1 Player
 	 4 GM
 	 5 HGM
 	 6 Party
