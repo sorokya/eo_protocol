@@ -2039,6 +2039,18 @@ server_packet(Item, Kick)
 	char cur_weight
 }
 
+"Reply to using an item that you don't have"
+server_packet(Item, Agree)
+{
+	short item_id
+}
+
+"Reply to trying to take a protected item from the ground"
+server_packet(Item, Spec)
+{
+	short = 2
+}
+
 
 // --- Barber
 
@@ -2384,6 +2396,12 @@ server_packet(Door, Open)
 	char = 0
 }
 
+"Reply to trying to open a locked door"
+server_packet(Door, Close)
+{
+	char key
+}
+
 
 // --- Chest
 
@@ -2434,6 +2452,12 @@ server_packet(Chest, Get)
 server_packet(Chest, Agree)
 {
 	struct ShortItem items[]
+}
+
+"Reply to trying to add an item to a full chest"
+server_packet(Chest, Spec)
+{
+	byte = 0
 }
 
 
@@ -2876,6 +2900,12 @@ client_packet(Spell, Target_Group)
 	three timestamp
 }
 
+"Raise arm to cast a spell (vestigial)"
+client_packet(Spell, Use)
+{
+	Direction direction
+}
+
 "Nearby player chanting a spell"
 server_packet(Spell, Request)
 {
@@ -2907,6 +2937,13 @@ server_packet(Avatar, Admin)
 	char hp_pct
 	char victim_died
 	short spell_id
+}
+
+"Nearby player raising their arm to cast a spell (vestigial)"
+server_packet(Spell, Player)
+{
+	short player_id
+	Direction direction
 }
 
 struct GroupHealTargetPlayer
