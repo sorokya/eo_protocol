@@ -24,9 +24,9 @@ enum PacketFamily : byte
 	24 Party
 	25 Refresh
 	26 NPC
-	27 CharacterMapInfo
-	28 NPCMapInfo
-	29 MapInfo
+	27 PlayerRange
+	28 NPCRange
+	29 Range
 	30 Paperdoll
 	31 Effect
 	32 Trade
@@ -155,9 +155,10 @@ enum Skin : char
 	6 Fish
 }
 
+"Shows on paperdoll and online player list. Official server/client doesn't support Guide or Guardian icons"
 enum PaperdollIcon : char
 {
-	 0 Normal
+	 1 Player
 	 4 GM
 	 5 HGM
 	 6 Party
@@ -233,7 +234,10 @@ enum InitReply : byte
 
 enum InitBanType : byte
 {
-	0 Temp
+	// The logic in the client is "permanent = ban_type >= 2", meaning 0 and 1 are both interpreted
+	// as temporary bans.
+	0 Temp0
+	1 Temp
 	2 Perm
 }
 
@@ -308,7 +312,8 @@ enum CharacterReply : short
 {
 	1 Exists
 	2 Full
-	3 Not_Approved
+	3 Full3
+	4 Not_Approved
 	5 OK
 	6 Deleted
 }
@@ -320,6 +325,7 @@ enum AccountReply : short
 	3 Created
 	5 Change_Failed
 	6 Changed
+	7 RequestDenied
 }
 
 enum LoginReply : short
@@ -327,6 +333,7 @@ enum LoginReply : short
 	1 Wrong_User
 	2 Wrong_UserPass
 	3 OK
+	4 Banned
 	5 LoggedIn
 	6 Busy
 }
@@ -492,6 +499,8 @@ struct CharacterMapInfo
 	struct Paperdoll_B000A0HSW paperdoll
 	SitState sit_state
 	char invisible
+	// TODO: Represent optionally present data
+	WarpAnimation animation
 	break
 }
 
@@ -507,7 +516,7 @@ struct ItemMapInfo
 {
 	short uid
 	short id
-	struct Coords coords
+	struct TinyCoords coords
 	three amount
 }
 
@@ -621,6 +630,11 @@ server_packet(Init, Init)
 
 			union(ban_type)
 			{
+				Temp0: ban_temp0
+				{
+					byte mins_remaining
+				}
+
 				Temp: ban_temp
 				{
 					byte mins_remaining
@@ -801,7 +815,7 @@ client_packet(Character, Create)
 	short session_id
 	Gender:short gender
 	short hairstyle
-	short harcolor
+	short haircolor
 	Skin:short skin
 	break
 	string name
@@ -902,6 +916,8 @@ enum WelcomeCode : short
 {
 	1 SelectCharacter
 	2 EnterGame
+	3 ServerBusy
+	4 LoggedIn
 }
 
 "Selected a character"
@@ -1045,13 +1061,13 @@ server_packet(AdminInteract, Reply)
 		{
 			string player_name
 			string message
-			string reportee_name
 		}
 
 		Report: report
 		{
 			string player_name
 			string message
+			string reportee_name
 		}
 	}
 }
@@ -1079,7 +1095,6 @@ server_packet(AdminInteract, List)
 	struct Item inventory[]
 	break
 	struct ShortItem bank[]
-	break
 }
 
 "Admin character info popup"
@@ -1124,7 +1139,7 @@ client_packet(Global, Open)
 }
 
 "Closed global tab"
-client_packet(Global, Open)
+client_packet(Global, Close)
 {
 	char = 'n'
 }
@@ -1225,13 +1240,13 @@ server_packet(Talk, Announce)
 }
 
 "Server message"
-client_packet(Talk, Server)
+server_packet(Talk, Server)
 {
 	raw_string message
 }
 
 "Status bar message"
-client_packet(Message, Open)
+server_packet(Message, Open)
 {
 	raw_string message
 }
@@ -1260,7 +1275,7 @@ server_packet(Attack, Player)
 }
 
 "Nearby player hit by another player"
-server_packet(Attack, Reply)
+server_packet(Avatar, Reply)
 {
 	short player_id
 	short victim_id
@@ -1277,8 +1292,13 @@ server_packet(Attack, Reply)
 client_packet(Chair, Request)
 {
 	SitAction sit_action
-	struct Coords coords
-	// TODO: Check if coords only appear for sit actions
+	union(sit_action)
+	{
+		Sit: sit
+		{
+			struct TinyCoords coords
+		}
+	}
 }
 
 "Nearby player sitting on a chair"
@@ -1297,6 +1317,13 @@ server_packet(Chair, Reply)
 	struct Coords coords
 	Direction direction
 	char = 0
+}
+
+"Your character standing up from a chair"
+server_packet(Chair, Close)
+{
+	short player_id
+	struct Coords coords
 }
 
 
@@ -1349,15 +1376,15 @@ client_packet(Emote, Report)
 	Emote emote
 }
 
-"Nearby player an emote"
-client_packet(Emote, Player)
+"Nearby player doing an emote"
+server_packet(Emote, Player)
 {
 	short player_id
 	Emote emote
 }
 
 "Nearby player doing an effect"
-client_packet(Effect, Player)
+server_packet(Effect, Player)
 {
 	short player_id
 	three effect_id
@@ -1420,9 +1447,7 @@ server_packet(Avatar, Remove)
 "Player has appeared in nearby view"
 server_packet(Players, Agree)
 {
-	break
-	struct CharacterMapInfo character
-	char = 1
+	struct NearbyInfo nearby
 }
 
 "Nearby player has walked"
@@ -1443,13 +1468,25 @@ server_packet(Walk, Reply)
 	struct ItemMapInfo items[]
 }
 
+"Your character has been frozen"
+server_packet(Walk, Close)
+{
+	char = 'f'
+}
+
+"Your character has been unfrozen"
+server_packet(Walk, Open)
+{
+	char = 'u'
+}
+
 
 // --- Bank
 
 "Talked to a banker NPC"
 client_packet(Bank, Open)
 {
-	short npc_id
+	short npc_index
 }
 
 "Depositing gold"
@@ -1459,7 +1496,7 @@ client_packet(Bank, Add)
 }
 
 "Withdrawing gold"
-client_packet(Bank, Add)
+client_packet(Bank, Take)
 {
 	int amount
 }
@@ -1504,7 +1541,7 @@ client_packet(Locker, Open)
 "Buying a locker space upgrade from a banker NPC"
 client_packet(Locker, Buy)
 {
-	// empty
+	char = 1
 }
 
 "Response to adding an item to a bank locker"
@@ -1543,16 +1580,23 @@ server_packet(Locker, Buy)
 "Sleeping at an inn"
 client_packet(Citizen, Request)
 {
-	// TODO: EOSERV doesn't implement this
+	short session_id
+	short vendor_id
+}
+
+"Confirm sleeping at an inn"
+client_packet(Citizen, Accept)
+{
+	short session_id
+	short vendor_id
 }
 
 "Subscribing to a town"
 client_packet(Citizen, Reply)
 {
-	// Check me: Not sure what these 2 break bytes are
 	short session_id
 	break
-	short npc_id
+	short vendor_id
 	break
 	string answer1
 	string answer2
@@ -1562,7 +1606,6 @@ client_packet(Citizen, Reply)
 "Giving up citizenship of a town"
 client_packet(Citizen, Remove)
 {
-	// Check me: Not sure if this is the session ID or if there's any proceeding data
 	short session_id
 }
 
@@ -1579,13 +1622,13 @@ server_packet(Citizen, Reply)
 }
 
 "Response to giving up citizenship of a town"
-client_packet(Citizen, Remove)
+server_packet(Citizen, Remove)
 {
 	InnUnsubscribeReply reply_code
 }
 
-"Response to to a citizenship NPC"
-client_packet(Citizen, Open)
+"Response from talking to a citizenship NPC"
+server_packet(Citizen, Open)
 {
 	three vendor_id
 	char current_home_id
@@ -1596,7 +1639,11 @@ client_packet(Citizen, Open)
 	raw_string question3
 }
 
-// TODO: Server sleep packet
+"Sleeping at an inn"
+server_packet(Citizen, Accept)
+{
+	int gold_amount
+}
 
 
 // --- Shop
@@ -1776,6 +1823,35 @@ enum StatId : short
 	6 Cha
 }
 
+enum MarriageRequestType : char
+{
+	1 MarriageApproval
+	2 Divorce
+}
+
+enum MarriageReply : short
+{
+	1 AlreadyMarried
+	2 NotMarried
+	3 Success
+	4 NotEnoughGold
+	5 WrongName
+	6 ServiceBusy
+	7 DivorceNotification
+}
+
+enum PriestReply : short
+{
+	1 NotDressed
+	2 LowLevel
+	3 PartnerNotPresent
+	4 PartnerNotDressed
+	5 Busy
+	6 DoYou
+	7 PartnerAlreadyMarried
+	8 NoPermission
+}
+
 "Spending a stat point on a stat or skill" 
 client_packet(StatSkill, Add)
 {
@@ -1790,6 +1866,7 @@ client_packet(StatSkill, Add)
 
 		Skill: skill
 		{
+			short spell_id
 		}
 	}
 }
@@ -1808,7 +1885,7 @@ server_packet(StatSkill, Open)
 	struct SkillLearn skills[]
 }
 
-"Response to attempting to learn a skill from a skill master"
+"Response from unsuccessful attempt to learn a skill from a skill master"
 server_packet(StatSkill, Reply)
 {
 	SkillMasterReply reply_code
@@ -1824,18 +1901,14 @@ server_packet(StatSkill, Reply)
 		{
 			short class_id
 		}
-
-		// FIXME: Add support for this to the parser
-		default: ok
-		{
-			int gold_amount
-		}
 	}
+}
 
-	fn eo_short spell_id() const
-	{
-		return eo_short(reply_code);
-	}
+"Response from learning a skill from a skill master" 
+server_packet(StatSkill, Take)
+{
+	short spell_id
+	int gold_amount
 }
 
 "Response to forgetting a skill at a skill master"
@@ -1893,8 +1966,7 @@ client_packet(Item, Report)
 "Dropping items on the ground"
 client_packet(Item, Drop)
 {
-	// Official EO sends either 3 or 4 bytes for drop_item.amount
-	struct Item drop_item
+	struct ShortItem drop_item
 	struct Coords coords
 }
 
@@ -1990,17 +2062,29 @@ server_packet(Item, Get)
 }
 
 "Receive item (from quest)"
-server_packet(Item, Get)
+server_packet(Item, Obtain)
 {
 	struct ShortItem item
 	char cur_weight
 }
 
 "Lose item (from quest)"
-server_packet(Item, Get)
+server_packet(Item, Kick)
 {
 	struct Item item
 	char cur_weight
+}
+
+"Reply to using an item that you don't have"
+server_packet(Item, Agree)
+{
+	short item_id
+}
+
+"Reply to trying to take a protected item from the ground"
+server_packet(Item, Spec)
+{
+	short = 2
 }
 
 
@@ -2208,10 +2292,10 @@ struct Paperdoll_Info
 	string name
 	string home
 	string partner
-	string tite
+	string title
 	string guild
 	string guild_rank
-	short player_Id
+	short player_id
 	char class_id
 	Gender gender
 	char = 0
@@ -2246,14 +2330,14 @@ server_packet(Paperdoll, Reply)
 }
 
 "Reply to unequipping an item"
-client_packet(Paperdoll, Remove)
+server_packet(Paperdoll, Remove)
 {
 	struct AvatarChange change
 	struct ItemCharacterStats stats
 }
 
 "Reply to equipping an item"
-client_packet(Paperdoll, Agree)
+server_packet(Paperdoll, Agree)
 {
 	struct AvatarChange change
 	struct ItemCharacterStats stats
@@ -2272,7 +2356,7 @@ server_packet(Paperdoll, Swap)
 }
 
 "Nearby player changed clothes"
-client_packet(Avatar, Agree)
+server_packet(Avatar, Agree)
 {
 	struct AvatarChange change
 }
@@ -2301,13 +2385,13 @@ server_packet(Book, Reply)
 "#ping command request"
 client_packet(Message, Ping)
 {
-	short something
+	short = 2
 }
 
 "#ping command reply"
 server_packet(Message, Pong)
 {
-	short something
+	short = 2
 }
 
 
@@ -2320,15 +2404,15 @@ client_packet(Players, Accept)
 }
 
 "Requesting a list of online players"
-client_packet(Players, List)
+client_packet(Players, Request)
 {
-	// empty
+	break
 }
 
 "Requesting a list of online friends"
 client_packet(Players, List)
 {
-	// empty
+	break
 }
 
 "#find command reply - offline"
@@ -2363,6 +2447,12 @@ server_packet(Door, Open)
 {
 	struct Coords coords
 	char = 0
+}
+
+"Reply to trying to open a locked door"
+server_packet(Door, Close)
+{
+	char key
 }
 
 
@@ -2417,13 +2507,19 @@ server_packet(Chest, Agree)
 	struct ShortItem items[]
 }
 
+"Reply to trying to add an item to a full chest"
+server_packet(Chest, Spec)
+{
+	byte = 0
+}
+
 
 // --- Refresh
 
 "Requesting new info about nearby objects"
 client_packet(Refresh, Request)
 {
-	// empty
+	break
 }
 
 
@@ -2432,37 +2528,36 @@ server_packet(Refresh, Reply)
 	struct NearbyInfo nearby
 }
 
-// --- MapInfo
-"Requesting MapInfo about nearby characters and/or npcs"
-client_packet(MapInfo, Request)
-{
-	short player_ids[] // can ommit if only requesting npcs
-	break              // can ommit if only requesting players
-	char npc_indexes[] // can ommit if only requesting players
-}
 
-"Requesting MapInfo about a character"
-client_packet(CharacterMapInfo, Request)
+// --- Range
+"Requesting info about nearby players and/or npcs"
+client_packet(Range, Request)
 {
-	short player_ids[] // reads to end
-}
-
-"Requesting MapInfo about a npc"
-client_packet(NPCMapInfo, Request)
-{
-	char num_npcs // game server ignores this
+	short player_ids[]
 	break
-	char npc_indexes[] // reads to end
+	char npc_indexes[]
+}
+
+"Sent when unknown player has walked into view"
+client_packet(PlayerRange, Request)
+{
+	short player_ids[]
+}
+
+"Sent when unknown npc has walked into view"
+client_packet(NPCRange, Request)
+{
+	char num_npcs
+	break
+	char npc_indexes[]
 }
 
 "MapInfo for characters and/or npcs"
-server_packet(MapInfo, Reply)
+server_packet(Range, Reply)
 {
-	char num_entities
-	break // omitted if not sending back characters
-	struct CharacterMapInfo characters[num_entities] // omitted if not sending back characters
-	struct NPCMapInfo npcs[] // reads to end
+	struct NearbyInfo nearby
 }
+
 
 // --- Party
 
@@ -2498,7 +2593,7 @@ client_packet(Party, Remove)
 "Request updated party info"
 client_packet(Party, Take)
 {
-	// empty
+	char num_members
 }
 
 "Received party invite / join request"
@@ -2509,7 +2604,7 @@ server_packet(Party, Request)
 	raw_string player_name
 }
 
-"Member list recieved when party is first joined"
+"Member list received when party is first joined"
 server_packet(Party, Create)
 {
 	struct PartyMember members[]
@@ -2577,14 +2672,15 @@ client_packet(Guild, Request)
 {
 	int session_id
 	break
-	raw_string(3) guild_tag
+	string guild_tag
 	string guild_name
 }
 
 "Accept pending guild creation invite"
 client_packet(Guild, Accept)
 {
-	// empty
+	int = 20202
+	short player_id
 }
 
 "Leave guild"
@@ -2618,7 +2714,7 @@ client_packet(Guild, Create)
 {
 	int session_id
 	break
-	raw_string(3) guild_tag
+	string guild_tag
 	string guild_name
 	string description
 }
@@ -2628,7 +2724,7 @@ client_packet(Guild, Player)
 {
 	int sesssion_id
 	break
-	raw_string(3) guild_tag
+	string guild_tag
 	string recruiter_name
 }
 
@@ -2767,7 +2863,7 @@ server_packet(Guild, Rank)
 }
 
 "Get guild bank reply"
-server_packet(Guild, Rank)
+server_packet(Guild, Sell)
 {
 	int gold_amount
 }
@@ -2814,11 +2910,16 @@ server_packet(Guild, Agree)
 	string guild_tag
 	string guild_name
 	string rank_name
-	break
 }
 
 
 // --- Spell
+
+enum SpellTargetType : char
+{
+	1 Player
+	2 NPC
+}
 
 "Begin spell chanting"
 client_packet(Spell, Request)
@@ -2827,13 +2928,10 @@ client_packet(Spell, Request)
 	three timestamp
 }
 
-// TODO: Need to find out target_type enum numbers
-// Probably 0=self, 1=player, 2=npc
-
 "Self-targeted spell cast"
 client_packet(Spell, Target_Self)
 {
-	char target_type
+	Direction direction
 	short spell_id
 	three timestamp
 }
@@ -2841,10 +2939,8 @@ client_packet(Spell, Target_Self)
 "Targeted spell cast"
 client_packet(Spell, Target_Other)
 {
-	char target_type
-	// TODO: Find out what these are
-	char = 0
-	short = 0
+	SpellTargetType target_type
+	three previous_timestamp
 	short spell_id
 	three timestamp
 }
@@ -2854,6 +2950,12 @@ client_packet(Spell, Target_Group)
 {
 	short spell_id
 	three timestamp
+}
+
+"Raise arm to cast a spell (vestigial)"
+client_packet(Spell, Use)
+{
+	Direction direction
 }
 
 "Nearby player chanting a spell"
@@ -2889,13 +2991,15 @@ server_packet(Avatar, Admin)
 	short spell_id
 }
 
+"Nearby player raising their arm to cast a spell (vestigial)"
+server_packet(Spell, Player)
+{
+	short player_id
+	Direction direction
+}
+
 struct GroupHealTargetPlayer
 {
-	break
-	break
-	break
-	break
-	break
 	short player_id
 	char hp_pct
 	short hp
@@ -2999,7 +3103,7 @@ server_packet(Trade, Spec)
 }
 
 "Partner agree state updated"
-server_packet(Trade, Spec)
+server_packet(Trade, Agree)
 {
 	short player_id
 	char agree_state
@@ -3112,7 +3216,7 @@ server_packet(Cast, Accept)
 	struct LevelUpStats level_up
 }
 
-"Killing all boss chidren"
+"Killing all boss children"
 server_packet(NPC, Junk)
 {
 	short npc_id
@@ -3276,7 +3380,7 @@ server_packet(Item, Accept)
 "Arena is blocked message"
 server_packet(Arena, Drop)
 {
-	// empty
+	char = 'N'
 }
 
 "Arena start message"
@@ -3288,9 +3392,9 @@ server_packet(Arena, Use)
 "Arena kill message"
 server_packet(Arena, Spec)
 {
-	short = 0
+	short player_id
 	break
-	char = 0
+	Direction direction
 	break
 	int num_kills
 	break
@@ -3299,7 +3403,7 @@ server_packet(Arena, Spec)
 }
 
 "Arena win message"
-server_packet(Arena, Spec)
+server_packet(Arena, Accept)
 {
 	string winner_name
 	int num_kills
@@ -3309,7 +3413,89 @@ server_packet(Arena, Spec)
 }
 
 
-// --- TODO: Law / Priest packets
+// --- Marriage
+
+"Talking to a law NPC"
+client_packet(Marriage, Open)
+{
+	short npc_index
+}
+
+"Requesting marriage approval"
+client_packet(Marriage, Request)
+{
+	MarriageRequestType request_type
+	int session_id
+	break
+	raw_string name
+}
+
+"Response from talking to a law NPC"
+server_packet(Marriage, Open)
+{
+	three session_id
+}
+
+"Reply to client Marriage-family packets"
+server_packet(Marriage, Reply)
+{
+	MarriageReply reply_code
+	union(reply_code)
+	{
+		Success: success
+		{
+			int gold_amount
+		}
+	}
+}
+
+
+// --- Priest
+
+"Accepting a marriage request"
+client_packet(Priest, Accept)
+{
+	short session_id
+}
+
+"Talking to a priest NPC"
+client_packet(Priest, Open)
+{
+	int npc_index
+}
+
+"Requesting marriage at a priest"
+client_packet(Priest, Request)
+{
+	int session_id
+	break
+	string name
+}
+
+"Saying "I do" at a wedding"
+client_packet(Priest, Use)
+{
+	int session_id
+}
+
+"Response from talking to a priest NPC"
+server_packet(Priest, Open)
+{
+	int session_id
+}
+
+"Reply to client Priest-family packets"
+server_packet(Priest, Reply)
+{
+	PriestReply reply_code
+}
+
+"Wedding request"
+server_packet(Priest, Request)
+{
+	short session_id
+	string partner_name
+}
 
 
 // --- Misc.
