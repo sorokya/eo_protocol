@@ -72,21 +72,24 @@ struct EIF_Item
 	short accuracy
 	short evade
 	short armor
-	char = 0
+	char return_damage
 	char str
 	char intl
 	char wis
 	char agi
 	char con
 	char cha
-	char = 0
-	char = 0
-	char = 0
-	char = 0
-	char = 0
-	char = 0
+	char light_resistance
+	char dark_resistance
+	char earth_resistance
+	char air_resistance
+	char water_resistance
+	char fire_resistance
+	"scroll_map|doll_graphic|exp_reward|hair_color|effect|key"
 	three spec1
+	"scroll_x|gender"
 	char spec2
+	"scroll_y"
 	char spec3
 	short level_req
 	short class_req
@@ -97,7 +100,7 @@ struct EIF_Item
 	short con_req
 	short cha_req
 	char element
-	char element_power
+	char element_damage
 	char weight
 	char = 0
 	EIF_Item_Size size
@@ -135,24 +138,24 @@ struct ENF_NPC
 {
 	prefix_string name
 	short graphic_id
-	char = 0
+	char race
 	short boss
 	short child
 	ENF_NPC_Type type
-	short spec1
+	short behavior_id
 	three hp
-	short = 0
+	short tp
 	short min_damage
 	short max_damage
 	short accuracy
 	short evade
 	short armor
-	char = 0
-	short = 0
-	short = 0
-	short element_weak
-	short element_weak_power
-	char = 0
+	char return_damage
+	short element
+	short element_damage
+	short element_weakness
+	short element_weakness_damage
+	char level
 	three experience
 }
 
@@ -223,6 +226,12 @@ enum ESF_Spell_Target_Type : char
 	3 Group
 }
 
+enum ESF_Skill_Nature : char
+{
+	0 Spell
+	1 Skill
+}
+
 struct ESF_Spell
 {
 	prefix_string name
@@ -232,31 +241,31 @@ struct ESF_Spell
 	short tp_cost
 	short sp_cost
 	char cast_time
-	char = 0
-	char = 0
+	ESF_Skill_Nature nature
+	char = 1
 	ESF_Spell_Type type
 	char element
 	short element_power
 	ESF_Spell_Target_Restrict target_restrict
 	ESF_Spell_Target_Type target_type
+	char target_time
 	char = 0
-	char = 0
-	short = 0
+	short max_skill_level
 	short min_damage
 	short max_damage
 	short accuracy
-	short = 0
-	short = 0
-	char = 0
-	short hp
-	short = 0
-	char = 0
-	short = 0
-	short = 0
-	short = 0
-	short = 0
-	short = 0
-	short = 0
+	short evade
+	short armor
+	char return_damage
+	short hp_heal
+	short tp_heal
+	char sp_heal
+	short str
+	short intl
+	short wis
+	short agi
+	short con
+	short cha
 }
 
 struct ESF_File
@@ -285,6 +294,17 @@ enum EMF_Effect : char
 	3 Quake
 }
 
+enum EMF_Music_Control : char
+{
+	0 InterruptIfDifferentPlayOnce
+	1 InterruptPlayOnce
+	2 FinishPlayOnce
+	3 InterruptIfDifferentPlayRepeat
+	4 InterruptPlayRepeat
+	5 FinishPlayRepeat
+	6 InterruptPlayNothing
+}
+
 enum EMF_Tile_Spec : char
 {
 	 0 Wall
@@ -295,7 +315,14 @@ enum EMF_Tile_Spec : char
 	 5 ChairDownRight
 	 6 ChairUpLeft
 	 7 ChairAll
+	 8 Reserved8
 	 9 Chest
+	10 Reserved10
+	11 Reserved11
+	12 Reserved12
+	13 Reserved13
+	14 Reserved14
+	15 Reserved15
 	16 BankVault
 	17 NPCBoundary
 	18 MapEdge
@@ -311,12 +338,12 @@ enum EMF_Tile_Spec : char
 	28 Jukebox
 	29 Jump
 	30 Water
-	31 SpecUnknown7
+	31 Reserved31
 	32 Arena
 	33 AmbientSource
-	34 Spikes1
-	35 Spikes2
-	36 Spikes3
+	34 TimedSpikes
+	35 Spikes
+	36 HiddenSpikes
 }
 
 struct EMF_NPC
@@ -329,12 +356,11 @@ struct EMF_NPC
 	char amount
 }
 
-struct EMF_Unknown
+"A legacy EMF entity used to specify a key on a door"
+struct EMF_LegacyDoorKey
 {
-	char = 0
-	char = 0
-	char = 0
-	char = 0
+	struct Coords coords
+	short key
 }
 
 struct EMF_Item
@@ -348,13 +374,79 @@ struct EMF_Item
 	three item_amount
 }
 
+struct EMF_Spec_Row_Tile
+{
+	char x
+	EMF_Tile_Spec spec
+}
+
+struct EMF_Spec_Row
+{
+	char y
+	char num_tiles
+	struct EMF_Spec_Row_Tile tiles[num_tiles]
+}
+
+struct EMF_Gfx_Row_Tile
+{
+	char x
+	short graphic
+}
+
+struct EMF_Gfx_Row
+{
+	char y
+	char num_tiles
+	struct EMF_Gfx_Row_Tile tiles[num_tiles]
+}
+
+struct EMF_Gfx_Layer
+{
+	char num_rows
+	struct EMF_Gfx_Row rows[num_rows]
+}
+
 struct EMF_Warp
 {
-	short warp_map
-	char warp_x
-	char warp_y
+	short map
+	struct Coords coords
 	char level_required
 	short door
+}
+
+struct EMF_Warp_Row_Tile
+{
+	char x
+	struct EMF_Warp warp
+}
+
+struct EMF_Warp_Row
+{
+	char y
+	char num_tiles
+	struct EMF_Warp_Row_Tile tiles[num_tiles]
+}
+
+struct EMF_Sign
+{
+	struct Coords coords
+	char raw_text_length
+	string text[text_length]
+
+	fn char text_length() const
+	{
+		return raw_text_length - 1;
+	}
+
+	fn string title() const
+	{
+		// TODO
+	}
+
+	fn string message() const
+	{
+		// TODO
+	}
 }
 
 struct EMF_File
@@ -379,14 +471,20 @@ struct EMF_File
 	char num_npcs
 	struct EMF_NPC npcs[num_npcs]
 
-	char num_unknowns
-	struct EMF_Unknown unknowns[num_unknowns]
+	char num_legacy_door_keys
+	struct EMF_LegacyDoorKey legacy_door_keys[num_legacy_door_keys]
 
 	char num_items
 	struct EMF_Item items[num_items]
 
-	// Rest is not included because more specialized code is required:
-	// emf_sparse(EMF_Tile_Spec) specs
-	// emf_sparse(struct EMF_Warp) warps
-	// emf_sparse(EMF_GFX) gfx[9]
+	char num_spec_rows
+	struct EMF_Spec_Row spec_rows[num_spec_rows]
+
+	char num_warp_rows
+	struct EMF_Warp_Row warp_rows[num_warp_rows]
+
+	struct EMF_Gfx_Layer gfx_layers[9]
+
+	char num_signs
+	struct EMF_Sign signs[num_signs]
 }
