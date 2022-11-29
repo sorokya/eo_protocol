@@ -597,8 +597,8 @@ server_packet(Init, Init)
 		OK: ok
 		{
 			byte seq_bytes[2]
-			byte decode_multiple
 			byte encode_multiple
+			byte decode_multiple
 			short player_id
 			int response
 
@@ -687,7 +687,7 @@ server_packet(Init, Init)
 "Confirm initialization data"
 client_packet(Connection, Accept)
 {
-	short encode_multiple
+	short decode_multiple
 	short encode_multiple
 	short player_id
 }
