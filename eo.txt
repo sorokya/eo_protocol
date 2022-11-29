@@ -582,6 +582,12 @@ client_packet(Init, Init)
 	}
 }
 
+"Requests a list of online players. Was used by WatchDog.exe to generate website pages"
+client_packet(Message, List)
+{
+	break
+}
+
 "Initialization reply"
 server_packet(Init, Init)
 {
@@ -652,6 +658,9 @@ server_packet(Init, Init)
 			raw_string content
 		}
 
+		// TODO: represent MESSAGE_LIST response here. It uses the same reply code
+		// 255, 255, 12, 2, 254, 255, 97, 112, 111, 108, 108, 111, 255, 255, 3, 55, 8, 254, 254, 2, 5, 255
+		// [short:num_characters] {string:name,string:title,char:level,int:experience,Gender:gender,AdminLevel:admin,break}
 		File_ECF: file_ecf
 		{
 			char file_id
