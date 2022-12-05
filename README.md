@@ -135,25 +135,3 @@ server_packet(Init, Init)
     }
 }
 ```
-
-# Functions
-
-Mostly just convenience functions. Could probably get away without these defined here
-
-```
-"Initialization request"
-client_packet(Init, Init)
-{
-	three challenge
-	char version[3]
-	char = 0
-	char = 0
-	raw_string hdid
-
-	fn static eo_int stupid_hash(eo_int i)
-	{
-		++i;
-		return 110905 + (i % 9 + 1) * ((11092004 - i) % ((i % 11 + 1) * 119)) * 119 + i % 2004;
-	}
-}
-```

@@ -323,6 +323,9 @@ enum AccountReply : short
 	5 Change_Failed
 	6 Changed
 	7 RequestDenied
+	8 Reserved8
+	9 Reserved9
+	_ SessionId
 }
 
 enum LoginReply : short
@@ -574,12 +577,6 @@ client_packet(Init, Init)
 	char = 0
 	char = 0
 	raw_string hdid
-
-	fn static eo_int stupid_hash(eo_int i)
-	{
-		++i;
-		return 110905 + (i % 9 + 1) * ((11092004 - i) % ((i % 11 + 1) * 119)) * 119 + i % 2004;
-	}
 }
 
 "Requests a list of online players. Was used by WatchDog.exe to generate website pages"
@@ -607,14 +604,6 @@ server_packet(Init, Init)
 			byte decode_multiple
 			short player_id
 			int response
-
-			fn eo2_uint seq_start() const
-			{
-				eo2_uint s1 = seq_bytes[0];
-				eo2_uint s2 = seq_bytes[1];
-
-				return (s1 * 7 + s2 - 13);
-			}
 		}
 
 		Banned: banned
@@ -712,11 +701,6 @@ server_packet(Connection, Player)
 {
 	short seq1
 	char seq2
-
-	fn eo2_uint seq_start() const
-	{
-		return eo2_uint(seq1) - eo2_uint(seq2);
-	}
 }
 
 
@@ -759,11 +743,6 @@ server_packet(Account, Reply)
 	char sequence_start
 
 	raw_string ok_no
-
-	fn eo_short session_id() const
-	{
-		return eo_short(reply_code);
-	}
 }
 
 
@@ -841,11 +820,6 @@ server_packet(Character, Reply)
 		{
 			struct Character_List character_list
 		}
-	}
-
-	fn eo_short session_id() const
-	{
-		return eo_short(reply_code);
 	}
 }
 
