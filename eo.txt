@@ -1620,7 +1620,7 @@ struct ShopCraftItem
 	struct VeryShortItem ingredients[4]
 }
 
-"Crafting an item from a shop" 
+"Crafting an item from a shop"
 client_packet(Shop, Create)
 {
 	short craft_item_id
@@ -1751,20 +1751,20 @@ struct SkillLearn
 	struct CharacterBaseStats stat_req
 }
 
-"Talking to a skill master NPC" 
+"Talking to a skill master NPC"
 client_packet(StatSkill, Open)
 {
 	short npc_index
 }
 
-"Learning a skill from a skill master" 
+"Learning a skill from a skill master"
 client_packet(StatSkill, Take)
 {
 	int session_id
 	short spell_id
 }
 
-"Forgetting a skill at a skill master" 
+"Forgetting a skill at a skill master"
 client_packet(StatSkill, Remove)
 {
 	int session_id
@@ -1810,7 +1810,7 @@ enum PriestReply : short
 	8 NoPermission
 }
 
-"Spending a stat point on a stat or skill" 
+"Spending a stat point on a stat or skill"
 client_packet(StatSkill, Add)
 {
 	TrainType action_type
@@ -1835,7 +1835,7 @@ client_packet(StatSkill, Junk)
 	int session_id
 }
 
-"Response from talking to a skill master NPC" 
+"Response from talking to a skill master NPC"
 server_packet(StatSkill, Open)
 {
 	short session_id
@@ -1862,7 +1862,7 @@ server_packet(StatSkill, Reply)
 	}
 }
 
-"Response from learning a skill from a skill master" 
+"Response from learning a skill from a skill master"
 server_packet(StatSkill, Take)
 {
 	short spell_id
