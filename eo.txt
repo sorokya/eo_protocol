@@ -314,6 +314,7 @@ enum CharacterReply : short
 	4 Not_Approved
 	5 OK
 	6 Deleted
+	_ SessionId
 }
 
 enum AccountReply : short
