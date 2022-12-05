@@ -553,7 +553,6 @@ struct NearbyInfo
 	char num_characters
 	break
 	struct CharacterMapInfo characters[num_characters]
-	break
 	struct NPCMapInfo npcs[]
 	break
 	struct ItemMapInfo items[]
