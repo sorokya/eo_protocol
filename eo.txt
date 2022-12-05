@@ -1225,7 +1225,7 @@ server_packet(Talk, Reply)
 "Global chat backfill"
 server_packet(Talk, List)
 {
-	GlobalBackfillMessage messages[]
+	struct GlobalBackfillMessage messages[]
 }
 
 "Status bar message"
@@ -2010,7 +2010,7 @@ server_packet(Item, Reply)
 		EXPReward: exp_reward
 		{
 			int experience
-			"A value greater than 0 is "new level" and indicates the player leveled up."
+			"A value greater than 0 is 'new level' and indicates the player leveled up."
 			char level_up
 			short stat_points
 			short skill_points
@@ -2580,7 +2580,7 @@ struct PartyExpShare
 {
 	short player_id
 	int experience
-	"A value greater than 0 is "new level" and indicates the player leveled up."
+	"A value greater than 0 is 'new level' and indicates the player leveled up."
 	char level_up
 }
 
@@ -2665,7 +2665,7 @@ server_packet(Party, Agree)
 "Updated experience and level-ups from party experience"
 server_packet(Party, Target_Group)
 {
-	PartyExpShare gains[]
+	struct PartyExpShare gains[]
 }
 
 "Failed party invite / join request"
@@ -3223,7 +3223,7 @@ server_packet(NPC, Spec)
 server_packet(NPC, Agree)
 {
 	short num_npcs
-	NPCMapInfo npcs[num_npcs]
+	struct NPCMapInfo npcs[num_npcs]
 }
 
 "Nearby NPC killed by player and you levelled up"
@@ -3530,7 +3530,7 @@ client_packet(Priest, Request)
 	string name
 }
 
-"Saying "I do" at a wedding"
+"Saying 'I do' at a wedding"
 client_packet(Priest, Use)
 {
 	int session_id
@@ -3590,7 +3590,7 @@ server_packet(Recover, Reply)
 {
 	int experience
 	short karma
-	"A value greater than 0 is "new level" and indicates the player leveled up."
+	"A value greater than 0 is 'new level' and indicates the player leveled up."
 	char level_up
 
 	// Only if level_up != 0
