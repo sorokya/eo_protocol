@@ -3158,14 +3158,14 @@ server_packet(NPC, Junk)
 
 struct NPCUpdatePos
 {
-	short npc_index
+	char npc_index
 	struct Coords coords
 	Direction direction
 }
 
 struct NPCUpdateAttack
 {
-	short npc_index
+	char npc_index
 	char killed_state
 	Direction direction
 	short player_id
@@ -3175,7 +3175,7 @@ struct NPCUpdateAttack
 
 struct NPCUpdateChat
 {
-	short npc_index
+	char npc_index
 	char message_length
 	raw_string(message_length) message
 }
