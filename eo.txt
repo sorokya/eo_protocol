@@ -219,7 +219,8 @@ enum InitReply : byte
 	  1 Out_Of_Date
 	  2 OK
 	  3 Banned
-	  5 File_Map
+	  4 Warp_File_EMF
+	  5 File_EMF
 	  6 File_EIF
 	  7 File_ENF
 	  8 File_ESF
@@ -293,7 +294,7 @@ enum InnUnsubscribeReply : char
 	1 Unsubscribed
 }
 
-enum SkillMasterReply : short
+enum SkillMasterReply : char
 {
 	1 Remove_Items
 	2 Wrong_Class
@@ -551,6 +552,7 @@ struct NearbyInfo
 	char num_characters
 	break
 	struct CharacterMapInfo characters[num_characters]
+	break
 	struct NPCMapInfo npcs[]
 	break
 	struct ItemMapInfo items[]
@@ -603,7 +605,7 @@ server_packet(Init, Init)
 			byte encode_multiple
 			byte decode_multiple
 			short player_id
-			int response
+			three response
 		}
 
 		Banned: banned
@@ -624,7 +626,12 @@ server_packet(Init, Init)
 			}
 		}
 
-		File_Map: file_map
+		Warp_File_EMF: warp_file_emf
+		{
+			raw_string content
+		}
+
+		File_EMF: file_emf
 		{
 			raw_string content
 		}
@@ -1104,6 +1111,12 @@ client_packet(Global, Close)
 
 // --- Talk
 
+struct GlobalBackfillMessage
+{
+	string player_name
+	string message
+}
+
 "Guild chat message"
 client_packet(Talk, Request)
 {
@@ -1202,10 +1215,30 @@ server_packet(Talk, Server)
 	raw_string message
 }
 
+"Reply to trying to send a private message"
+server_packet(Talk, Reply)
+{
+	TalkReply reply_code
+	string name
+}
+
+"Global chat backfill"
+server_packet(Talk, List)
+{
+	GlobalBackfillMessage messages[]
+}
+
 "Status bar message"
 server_packet(Message, Open)
 {
 	raw_string message
+}
+
+"Large message box"
+server_packet(Message, Accept)
+{
+	string messages[4]
+	break
 }
 
 "Temporary mute applied"
@@ -1238,7 +1271,7 @@ server_packet(Avatar, Reply)
 	short victim_id
 	three damage
 	Direction direction
-	char hp_pct
+	char hp_percentage
 	char died
 }
 
@@ -1531,6 +1564,12 @@ server_packet(Locker, Buy)
 	char locker_upgrades
 }
 
+"Reply to trying to add an item to a full locker"
+server_packet(Locker, Spec)
+{
+	char locker_max_items
+}
+
 
 // --- Citizen
 
@@ -1602,6 +1641,12 @@ server_packet(Citizen, Accept)
 	int gold_amount
 }
 
+"Reply to requesting sleeping at an inn"
+server_packet(Citizen, Request)
+{
+	int cost
+}
+
 
 // --- Shop
 
@@ -1619,7 +1664,7 @@ struct ShopCraftItem
 	struct VeryShortItem ingredients[4]
 }
 
-"Crafting an item from a shop" 
+"Crafting an item from a shop"
 client_packet(Shop, Create)
 {
 	short craft_item_id
@@ -1750,20 +1795,20 @@ struct SkillLearn
 	struct CharacterBaseStats stat_req
 }
 
-"Talking to a skill master NPC" 
+"Talking to a skill master NPC"
 client_packet(StatSkill, Open)
 {
 	short npc_index
 }
 
-"Learning a skill from a skill master" 
+"Learning a skill from a skill master"
 client_packet(StatSkill, Take)
 {
 	int session_id
 	short spell_id
 }
 
-"Forgetting a skill at a skill master" 
+"Forgetting a skill at a skill master"
 client_packet(StatSkill, Remove)
 {
 	int session_id
@@ -1809,7 +1854,7 @@ enum PriestReply : short
 	8 NoPermission
 }
 
-"Spending a stat point on a stat or skill" 
+"Spending a stat point on a stat or skill"
 client_packet(StatSkill, Add)
 {
 	TrainType action_type
@@ -1834,7 +1879,7 @@ client_packet(StatSkill, Junk)
 	int session_id
 }
 
-"Response from talking to a skill master NPC" 
+"Response from talking to a skill master NPC"
 server_packet(StatSkill, Open)
 {
 	short session_id
@@ -1861,7 +1906,7 @@ server_packet(StatSkill, Reply)
 	}
 }
 
-"Response from learning a skill from a skill master" 
+"Response from learning a skill from a skill master"
 server_packet(StatSkill, Take)
 {
 	short spell_id
@@ -1965,6 +2010,7 @@ server_packet(Item, Reply)
 		EXPReward: exp_reward
 		{
 			int experience
+			"A value greater than 0 is "new level" and indicates the player leveled up."
 			char level_up
 			short stat_points
 			short skill_points
@@ -2048,7 +2094,9 @@ client_packet(Barber, Open)
 "Purchasing a hair-style"
 client_packet(Barber, Buy)
 {
-	short npc_index
+	char style
+	char color
+	int session_id
 }
 
 "Reply from talking to barber NPC"
@@ -2058,7 +2106,7 @@ server_packet(Barber, Open)
 }
 
 "Reply from purchasing a hair-style"
-server_packet(Barber, Open)
+server_packet(Barber, Agree)
 {
 	int gold_amount
 	struct AvatarChange change
@@ -2151,9 +2199,9 @@ server_packet(Jukebox, Agree)
 }
 
 "Reply to unsuccessfully requesting a song"
-server_packet(Jukebox, Use)
+server_packet(Jukebox, Reply)
 {
-	short track_id
+	short = 1
 }
 
 "Reply to opening the jukebox listing"
@@ -2172,8 +2220,14 @@ server_packet(Jukebox, Msg)
 	char note_id
 }
 
-"Play background music"
+"Play jukebox music"
 server_packet(Jukebox, Player)
+{
+        char mfx_id
+}
+
+"Play background music"
+server_packet(Jukebox, Use)
 {
         char mfx_id
 }
@@ -2287,6 +2341,14 @@ server_packet(Paperdoll, Agree)
 	struct ItemCharacterStats stats
 }
 
+"Failed to equip an item due to being the incorrect class"
+// There is no visible effect in the client, it simply re-assigns the player's class
+server_packet(Paperdoll, Ping)
+{
+	"The player's current class ID -- not the item's required class ID"
+	char class_id
+}
+
 "Nearby player changed clothes"
 server_packet(Avatar, Agree)
 {
@@ -2326,6 +2388,12 @@ server_packet(Message, Pong)
 	short = 2
 }
 
+"Server is rebooting"
+server_packet(Message, Close)
+{
+	char = 'r'
+}
+
 
 // --- Players
 
@@ -2345,6 +2413,12 @@ client_packet(Players, Request)
 client_packet(Players, List)
 {
 	break
+}
+
+"Nearby player has logged out"
+server_packet(Players, Remove)
+{
+	short player_id
 }
 
 "#find command reply - offline"
@@ -2498,8 +2572,23 @@ struct PartyMember
 	short player_id
 	char leader
 	char level
-	char hp_pct
+	char hp_percentage
 	string name
+}
+
+struct PartyExpShare
+{
+	short player_id
+	int experience
+	"A value greater than 0 is "new level" and indicates the player leveled up."
+	char level_up
+}
+
+enum PartyReply : char
+{
+	0 AlreadyInAnotherParty
+	1 AlreadyInYourParty
+	2 PartyIsFull
 }
 
 "Send party invite / join request"
@@ -2570,15 +2659,31 @@ server_packet(Party, List)
 server_packet(Party, Agree)
 {
 	short player_id
-	char hp_pct
+	char hp_percentage
 }
 
-"Experience gained from party"
+"Updated experience and level-ups from party experience"
 server_packet(Party, Target_Group)
 {
-	short player_id
-	int experience
-	char level_up
+	PartyExpShare gains[]
+}
+
+"Failed party invite / join request"
+server_packet(Party, Reply)
+{
+	PartyReply reply_code
+	union (reply_code)
+	{
+		AlreadyInAnotherParty: already_in_another_party
+		{
+			string player_name
+		}
+
+		AlreadyInYourParty: already_in_your_party
+		{
+			string player_name
+		}
+	}
 }
 
 
@@ -2631,7 +2736,7 @@ client_packet(Guild, Agree)
 	{
 		Description: description
 		{
-			string description
+			raw_string description
 		}
 
 		Ranks: ranks
@@ -2665,24 +2770,6 @@ client_packet(Guild, Take)
 {
 	int session_id
 	GuildInfoType info_type
-
-	union(info_type)
-	{
-		Description: description
-		{
-			string description
-		}
-
-		Ranks: ranks
-		{
-			string ranks[9]
-		}
-
-		Bank: bank
-		{
-			int gold_amount
-		}
-	}
 }
 
 "Accepted a join request"
@@ -2844,6 +2931,20 @@ server_packet(Guild, Agree)
 	string rank_name
 }
 
+"Update guild rank"
+server_packet(Guild, Accept)
+{
+	char rank
+}
+
+"Left the guild"
+// The official server never sends this packet, so the dummy byte is unknown.
+// This packet is only known as a result of decompiling the official client.
+server_packet(Guild, Kick)
+{
+	break
+}
+
 
 // --- Spell
 
@@ -2903,7 +3004,7 @@ server_packet(Spell, Target_Self)
 	short player_id
 	short spell_id
 	int spell_heal_hp
-	char hp_pct
+	char hp_percentage
 
 	// TODO: Represent optionally present data
 	short hp
@@ -2911,14 +3012,14 @@ server_packet(Spell, Target_Self)
 	short = 1
 }
 
-"Nearby player hit by a spell from a player"
+"Nearby player hit by a damage spell from a player"
 server_packet(Avatar, Admin)
 {
 	short caster_id
 	short victim_id
 	char caster_direction
 	three damage
-	char hp_pct
+	char hp_percentage
 	char victim_died
 	short spell_id
 }
@@ -2933,11 +3034,11 @@ server_packet(Spell, Player)
 struct GroupHealTargetPlayer
 {
 	short player_id
-	char hp_pct
+	char hp_percentage
 	short hp
 }
 
-"Nearby player(s) hit by a group spell from a player"
+"Nearby player(s) hit by a group heal spell from a player"
 server_packet(Spell, Target_Group)
 {
 	short spell_id
@@ -2946,6 +3047,18 @@ server_packet(Spell, Target_Group)
 	short spell_heal_hp
 
 	struct GroupHealTargetPlayer players[]
+}
+
+"Nearby player hit by a heal spell from a player"
+server_packet(Spell, Target_Other)
+{
+	short victim_id
+	short caster_id
+	Direction caster_direction
+	short spell_id
+	int spell_heal_hp
+	char hp_percentage
+	short hp
 }
 
 
@@ -3016,8 +3129,14 @@ server_packet(Trade, Open)
 	string your_name
 }
 
-"Trade items updated"
+"Trade updated (items changed)"
 server_packet(Trade, Reply)
+{
+	struct TradeItemData trade_data
+}
+
+"Trade updated (items changed while trade was acceptedd)"
+server_packet(Trade, Admin)
 {
 	struct TradeItemData trade_data
 }
@@ -3069,7 +3188,7 @@ server_packet(NPC, Reply)
 	char player_direction
 	short npc_index
 	three damage
-	short hp_pct
+	short hp_percentage
 	// This is probably something
 	char = 1
 }
@@ -3082,7 +3201,7 @@ server_packet(Cast, Reply)
 	char player_direction
 	short npc_index
 	three damage
-	short hp_pct
+	short hp_percentage
 	short caster_tp
 }
 
@@ -3098,6 +3217,13 @@ server_packet(NPC, Spec)
 	int drop_amount
 	three damage
 	int experience
+}
+
+"Reply to request for information about nearby NPCs"
+server_packet(NPC, Agree)
+{
+	short num_npcs
+	NPCMapInfo npcs[num_npcs]
 }
 
 "Nearby NPC killed by player and you levelled up"
@@ -3154,26 +3280,40 @@ server_packet(NPC, Junk)
 	short npc_id
 }
 
-struct NPCUpdatePos
+"NPC chat message"
+server_packet(NPC, Dialog)
 {
 	short npc_index
+	string message
+}
+
+"NPC chat messages"
+server_packet(Quest, Report)
+{
+	short npc_id
+	string messages[]
+}
+
+struct NPCUpdatePos
+{
+	char npc_index
 	struct Coords coords
 	Direction direction
 }
 
 struct NPCUpdateAttack
 {
-	short npc_index
+	char npc_index
 	char killed_state
 	Direction direction
 	short player_id
 	three damage
-	char hp_pct
+	char hp_percentage
 }
 
 struct NPCUpdateChat
 {
-	short npc_index
+	char npc_index
 	char message_length
 	raw_string(message_length) message
 }
@@ -3427,7 +3567,7 @@ enum MapDamageType : char
 struct MapDrainDamageOther
 {
 	short player_id
-	char hp_pct
+	char hp_percentage
 	short damage
 }
 
@@ -3450,11 +3590,30 @@ server_packet(Recover, Reply)
 {
 	int experience
 	short karma
+	"A value greater than 0 is "new level" and indicates the player leveled up."
 	char level_up
 
 	// Only if level_up != 0
 	short stat_points
 	short skill_points
+}
+
+"Updated stats when levelling up from party experience"
+server_packet(Recover, TargetGroup)
+{
+	short stat_points
+	short skill_points
+	short max_hp
+	short max_tp
+	short max_sp
+}
+
+"Nearby player gained HP"
+server_packet(Recover, Agree)
+{
+	short player_id
+	short heal_hp
+	char hp_percentage
 }
 
 "Map effect"
@@ -3513,7 +3672,7 @@ server_packet(Effect, Target_Other)
 server_packet(Effect, Admin)
 {
 	short player_id
-	char hp_pct
+	char hp_percentage
 	char died
 	three damage
 }
