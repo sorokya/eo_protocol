@@ -877,7 +877,7 @@ struct ServerSettings
 	short hgm_flood_rate
 }
 
-enum WelcomeCode : short
+enum WelcomeReply : short
 {
 	1 SelectCharacter
 	2 EnterGame
@@ -931,9 +931,9 @@ client_packet(Welcome, Agree)
 "Reply to selecting a character / entering game"
 server_packet(Welcome, Reply)
 {
-	WelcomeCode welcome_code
+	WelcomeReply reply_code
 
-	union(welcome_code)
+	union(reply_code)
 	{
 		SelectCharacter: select_character
 		{
