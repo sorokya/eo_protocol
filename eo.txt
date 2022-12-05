@@ -2049,7 +2049,8 @@ client_packet(Barber, Open)
 "Purchasing a hair-style"
 client_packet(Barber, Buy)
 {
-	short npc_index
+	char style
+	char color
 }
 
 "Reply from talking to barber NPC"
