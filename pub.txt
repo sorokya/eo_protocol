@@ -431,7 +431,7 @@ struct EMF_Sign
 {
 	struct Coords coords
 	short raw_text_length
-	raw_string(raw_text_length - 1) text
+	emf_string(raw_text_length - 1) text
 	char title_length
 	sub_string(text, 0, title_length) title
 	sub_string(text, title_length) message
@@ -441,7 +441,7 @@ struct EMF_File
 {
 	raw_string(3) magic
 	short rid[2]
-	raw_string(24) name
+	emf_string(24) name
 	EMF_Type type
 	EMF_Effect effect
 	char music_id
