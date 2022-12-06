@@ -317,6 +317,7 @@ enum CharacterReply : short
 	4 Not_Approved
 	5 OK
 	6 Deleted
+	_ SessionId
 }
 
 enum AccountReply : short
@@ -565,7 +566,6 @@ struct NearbyInfo
 	char num_characters
 	break
 	struct CharacterMapInfo characters[num_characters]
-	break
 	struct NPCMapInfo npcs[]
 	break
 	struct ItemMapInfo items[]
@@ -641,30 +641,30 @@ server_packet(Init, Init)
 
 		Warp_File_EMF: warp_file_emf
 		{
-			raw_string content
+			byte content[]
 		}
 
 		File_EMF: file_emf
 		{
-			raw_string content
+			byte content[]
 		}
 
 		File_EIF: file_eif
 		{
 			char file_id
-			raw_string content
+			byte content[]
 		}
 
 		File_ENF: file_enf
 		{
 			char file_id
-			raw_string content
+			byte content[]
 		}
 
 		File_ESF: file_esf
 		{
 			char file_id
-			raw_string content
+			byte content[]
 		}
 
 		// TODO: represent MESSAGE_LIST response here. It uses the same reply code
@@ -673,12 +673,12 @@ server_packet(Init, Init)
 		File_ECF: file_ecf
 		{
 			char file_id
-			raw_string content
+			byte content[]
 		}
 
 		Map_Mutation: map_mutation
 		{
-			raw_string content
+			byte content[]
 		}
 
 		Players: players
@@ -902,7 +902,7 @@ struct ServerSettings
 	short hgm_flood_rate
 }
 
-enum WelcomeCode : short
+enum WelcomeReply : short
 {
 	1 SelectCharacter
 	2 EnterGame
@@ -956,9 +956,9 @@ client_packet(Welcome, Agree)
 "Reply to selecting a character / entering game"
 server_packet(Welcome, Reply)
 {
-	WelcomeCode welcome_code
+	WelcomeReply reply_code
 
-	union(welcome_code)
+	union(reply_code)
 	{
 		SelectCharacter: select_character
 		{
@@ -1251,7 +1251,7 @@ server_packet(Talk, Reply)
 "Global chat backfill"
 server_packet(Talk, List)
 {
-	GlobalBackfillMessage messages[]
+	struct GlobalBackfillMessage messages[]
 }
 
 "Status bar message"
@@ -2044,7 +2044,7 @@ server_packet(Item, Reply)
 		EXPReward: exp_reward
 		{
 			int experience
-			"A value greater than 0 is "new level" and indicates the player leveled up."
+			"A value greater than 0 is 'new level' and indicates the player leveled up."
 			char level_up
 			short stat_points
 			short skill_points
@@ -2631,7 +2631,7 @@ struct PartyExpShare
 {
 	short player_id
 	int experience
-	"A value greater than 0 is "new level" and indicates the player leveled up."
+	"A value greater than 0 is 'new level' and indicates the player leveled up."
 	char level_up
 }
 
@@ -2716,7 +2716,7 @@ server_packet(Party, Agree)
 "Updated experience and level-ups from party experience"
 server_packet(Party, Target_Group)
 {
-	PartyExpShare gains[]
+	struct PartyExpShare gains[]
 }
 
 "Failed party invite / join request"
@@ -3274,7 +3274,7 @@ server_packet(NPC, Spec)
 server_packet(NPC, Agree)
 {
 	short num_npcs
-	NPCMapInfo npcs[num_npcs]
+	struct NPCMapInfo npcs[num_npcs]
 }
 
 "Nearby NPC killed by player and you levelled up"
@@ -3595,7 +3595,7 @@ client_packet(Priest, Request)
 	string name
 }
 
-"Saying "I do" at a wedding"
+"Saying 'I do' at a wedding"
 client_packet(Priest, Use)
 {
 	int session_id
@@ -3655,7 +3655,7 @@ server_packet(Recover, Reply)
 {
 	int experience
 	short karma
-	"A value greater than 0 is "new level" and indicates the player leveled up."
+	"A value greater than 0 is 'new level' and indicates the player leveled up."
 	char level_up
 
 	// Only if level_up != 0

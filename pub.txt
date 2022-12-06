@@ -62,7 +62,7 @@ struct EIF_Item
 {
 	prefix_string name
 	short graphic_id
-	EIF_Item_SubType type
+	EIF_Item_Type type
 	EIF_Item_SubType subtype
 	EIF_Item_Special special
 	short hp
@@ -221,8 +221,8 @@ enum ESF_Spell_Target_Restrict : char
 
 enum ESF_Spell_Target_Type : char
 {
-	0 Normal
-	1 Self
+	0 Other
+	1 Player
 	3 Group
 }
 
@@ -430,30 +430,18 @@ struct EMF_Warp_Row
 struct EMF_Sign
 {
 	struct Coords coords
-	char raw_text_length
-	string text[text_length]
-
-	fn char text_length() const
-	{
-		return raw_text_length - 1;
-	}
-
-	fn string title() const
-	{
-		// TODO
-	}
-
-	fn string message() const
-	{
-		// TODO
-	}
+	short raw_text_length
+	emf_string(raw_text_length - 1) text
+	char title_length
+	sub_string(text, 0, title_length) title
+	sub_string(text, title_length) message
 }
 
 struct EMF_File
 {
 	raw_string(3) magic
 	short rid[2]
-	raw_string(24) name
+	emf_string(24) name
 	EMF_Type type
 	EMF_Effect effect
 	char music_id
@@ -487,4 +475,140 @@ struct EMF_File
 
 	char num_signs
 	struct EMF_Sign signs[num_signs]
+}
+
+struct Drop
+{
+	short item_id
+	three min
+	three max
+	short rate
+}
+
+struct Drop_NPC
+{
+	short npc_id
+	short num_of_drops
+	struct Drop drops[num_of_drops]
+}
+
+struct Drop_File
+{
+	raw_string(3) magic
+	struct Drop_NPC npcs[]
+}
+
+struct Inn
+{
+	short vendor_id
+	prefix_string name
+	short spawn_map
+	char spawn_x
+	char spawn_y
+	short sleep_map
+	char sleep_x
+	char sleep_y
+	char alt_spawn_enabled
+	short alt_spawn_map
+	char alt_spawn_x
+	char alt_spawn_y
+	prefix_string question1
+	prefix_string answer1
+	prefix_string question2
+	prefix_string answer2
+	prefix_string question3
+	prefix_string answer3
+}
+
+struct Inn_File
+{
+	raw_string(3) magic
+	struct Inn inns[]
+}
+
+struct Skill
+{
+	short skill_id
+	char min_level
+	char class_req
+	int price
+	short skill_id_req1
+	short skill_id_req2
+	short skill_id_req3
+	short skill_id_req4
+	short str_req
+	short int_req
+	short wis_req
+	short agi_req
+	short con_req
+	short cha_req
+}
+
+struct SkillMaster
+{
+	short vendor_id
+	prefix_string name
+	char min_level
+	char max_level
+	char class_req
+	short num_skills
+	struct Skill skills[num_skills]
+}
+
+struct SkillMaster_File
+{
+	raw_string(3) magic
+	struct SkillMaster skill_masters[]
+}
+
+struct Trade
+{
+	short item_id
+	three buy_price
+	three sell_price
+	char max_amount
+}
+
+struct Craft
+{
+	short item_id
+	short ingredient1_item_id
+	char ingredient1_amount
+	short ingredient2_item_id
+	char ingredient2_amount
+	short ingredient3_item_id
+	char ingredient3_amount
+}
+
+struct Shop
+{
+	short vendor_id
+	prefix_string name
+	char min_level
+	char max_level
+	char class_req
+	short num_trades
+	char num_crafts
+	struct Trade trades[num_trades]
+	struct Craft crafts[num_crafts]
+}
+
+struct Shop_File
+{
+	raw_string(3) magic
+	struct Shop shops[]
+}
+
+struct Talk_NPC
+{
+	short npc_id
+	char rate
+	char num_messages
+	prefix_string messages[num_messages]
+}
+
+struct Talk_File
+{
+	raw_string(3) magic
+	struct Talk_NPC npcs[]
 }
