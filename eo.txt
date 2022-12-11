@@ -858,6 +858,16 @@ server_packet(Login, Reply)
 		{
 			struct Character_List character_list
 		}
+
+		Wrong_UserPass: wrong_user_pass
+		{
+			raw_string = "NO"
+		}
+
+		Wrong_User: wrong_user
+		{
+			raw_string = "NO"
+		}
 	}
 }
 
