@@ -1,4 +1,3 @@
-
 enum PacketFamily : byte
 {
 	 1 Connection
@@ -838,10 +837,29 @@ client_packet(Character, Take)
 server_packet(Character, Reply)
 {
 	CharacterReply reply_code
-	raw_string ok_no
 
 	union(reply_code)
 	{
+		Full: full
+		{
+			raw_string no
+		}
+
+		Full3: full3
+		{
+			raw_string no
+		}
+
+		Not_Approved: not_approved
+		{
+			raw_string no
+		}
+
+		SessionId: session_id
+		{
+			raw_string go
+		}
+
 		OK: ok
 		{
 			struct Character_List character_list
@@ -3716,4 +3734,3 @@ server_packet(Music, Player)
 {
 	char sound_id
 }
-
