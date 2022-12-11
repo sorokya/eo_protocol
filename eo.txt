@@ -746,8 +746,14 @@ server_packet(Account, Reply)
 {
 	AccountReply reply_code
 
-	// TODO: Represent optionally present data
-	char sequence_start
+	union(reply_code)
+	{
+		SessionId: session_id
+		{
+			// TODO: Represent optionally present data
+			char sequence_start
+		}
+	}
 
 	raw_string ok_no
 }
@@ -861,12 +867,12 @@ server_packet(Login, Reply)
 
 		Wrong_UserPass: wrong_user_pass
 		{
-			raw_string = "NO"
+			raw_string no
 		}
 
 		Wrong_User: wrong_user
 		{
-			raw_string = "NO"
+			raw_string no
 		}
 	}
 }
