@@ -748,14 +748,32 @@ server_packet(Account, Reply)
 
 	union(reply_code)
 	{
+		Exists: exists
+		{
+			raw_string no
+		}
+
+		Not_Approved: not_approved
+		{
+			raw_string no
+		}
+
+		Change_Failed: change_failed
+		{
+			raw_string no
+		}
+
+		Changed: changed
+		{
+			raw_string ok
+		}
+
 		SessionId: session_id
 		{
-			// TODO: Represent optionally present data
 			char sequence_start
+			raw_string go
 		}
 	}
-
-	raw_string ok_no
 }
 
 
