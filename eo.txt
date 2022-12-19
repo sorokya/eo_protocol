@@ -767,10 +767,15 @@ server_packet(Account, Reply)
 			raw_string ok
 		}
 
+		Created: created
+		{
+			raw_string go
+		}
+
 		SessionId: session_id
 		{
 			char sequence_start
-			raw_string go
+			raw_string ok
 		}
 	}
 }
@@ -855,9 +860,14 @@ server_packet(Character, Reply)
 			raw_string no
 		}
 
+		Exists: exists
+		{
+			raw_string no
+		}
+
 		SessionId: session_id
 		{
-			raw_string go
+			raw_string ok
 		}
 
 		OK: ok
