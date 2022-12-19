@@ -1800,6 +1800,16 @@ struct CharacterBaseStats
 	short cha
 }
 
+struct CharacterBaseStats2
+{
+	short str
+	short wis
+	short intl
+	short agi
+	short con
+	short cha
+}
+
 struct CharacterSecondaryStats
 {
 	short mindam
@@ -1833,7 +1843,7 @@ struct CharacterStats2
 	short skill_points
 	short karma
 	struct CharacterSecondaryStats secondary
-	struct CharacterBaseStats base
+	struct CharacterBaseStats2 base
 }
 
 struct CharacterStats3
