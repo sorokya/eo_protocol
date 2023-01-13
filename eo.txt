@@ -575,9 +575,8 @@ client_packet(Init, Init)
 {
 	three challenge
 	char version[3]
-	char = 0
-	char = 0
-	raw_string hdid
+	char = 'p'
+	prefix_string hdid
 }
 
 "Requests a list of online players. Was used by WatchDog.exe to generate website pages"

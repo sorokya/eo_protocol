@@ -41,6 +41,7 @@ enum EIF_Item_Special : char
 {
 	0 Normal
 	1 Rare
+	2 Legendary
 	3 Unique
 	4 Lore
 	5 Cursed
@@ -234,8 +235,10 @@ enum ESF_Skill_Nature : char
 
 struct ESF_Spell
 {
-	prefix_string name
-	prefix_string shout
+	char name_length
+	char shout_length
+	raw_string(name_length) name
+	raw_string(shout_length) shout
 	short icon_id
 	short graphic_id
 	short tp_cost
