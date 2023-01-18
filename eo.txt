@@ -341,6 +341,7 @@ enum LoginReply : short
 
 enum WarpAnimation : char
 {
+	0 None
 	1 Scroll
 	2 Admin
 }
@@ -489,7 +490,7 @@ struct CharacterMapInfo
 	char class_id
 	raw_string(3) guild_tag
 	char level
-	char gender
+	Gender gender
 	char hairstyle
 	char haircolor
 	Skin skin_id
@@ -915,6 +916,21 @@ server_packet(Login, Reply)
 		}
 
 		Wrong_User: wrong_user
+		{
+			raw_string no
+		}
+
+		Banned: banned
+		{
+			raw_string no
+		}
+
+		LoggedIn: logged_in
+		{
+			raw_string no
+		}
+
+		Busy: busy
 		{
 			raw_string no
 		}
