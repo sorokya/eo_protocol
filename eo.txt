@@ -500,8 +500,7 @@ struct CharacterMapInfo
 	struct Paperdoll_B000A0HSW paperdoll
 	SitState sit_state
 	char invisible
-	// TODO: Represent optionally present data
-	WarpAnimation animation
+	optional WarpAnimation animation
 	break
 }
 
@@ -1489,9 +1488,7 @@ client_packet(Walk, Player)
 server_packet(Avatar, Remove)
 {
 	short player_id
-
-	// TODO: Represent optionally present data
-	WarpAnimation animation
+	optional WarpAnimation animation
 }
 
 "Player has appeared in nearby view"
