@@ -294,7 +294,10 @@ enum EMF_Effect : char
 	0 None
 	1 HPDrain
 	2 TPDrain
-	3 Quake
+	3 Quake1
+	4 Quake2
+	5 Quake3
+	6 Quake4
 }
 
 enum EMF_Music_Control : char
