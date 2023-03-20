@@ -100,6 +100,7 @@ enum AdminLevel : char
 	2 Guardian
 	3 GM
 	4 HGM
+	5 God
 }
 
 enum Direction : char
