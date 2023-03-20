@@ -584,6 +584,8 @@ struct Craft
 	char ingredient2_amount
 	short ingredient3_item_id
 	char ingredient3_amount
+	short ingredient4_item_id
+	char ingredient4_amount
 }
 
 struct Shop
