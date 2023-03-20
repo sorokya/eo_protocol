@@ -1269,7 +1269,7 @@ server_packet(Talk, Tell)
 server_packet(Talk, Player)
 {
 	short player_id
-	string message
+	raw_string message
 }
 
 "Admin chat message"
@@ -1296,7 +1296,7 @@ server_packet(Talk, Server)
 server_packet(Talk, Reply)
 {
 	TalkReply reply_code
-	string name
+	raw_string name
 }
 
 "Global chat backfill"
