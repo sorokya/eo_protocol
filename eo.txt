@@ -2108,8 +2108,9 @@ server_packet(Item, Reply)
 "Reply to dropping items on the ground"
 server_packet(Item, Drop)
 {
-	struct ShortItem dropped_item
-	int = 0
+	short item_id
+	three amount_dropped
+	int amount_remaining
 	short item_index
 	struct Coords coords
 	struct Weight weight
