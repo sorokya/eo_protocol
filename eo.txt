@@ -2124,6 +2124,12 @@ server_packet(Item, Add)
 	struct Coords coords
 }
 
+"Item disappeared from the ground"
+server_packet(Item, Remove)
+{
+	short item_index
+}
+
 "Reply to junking items"
 server_packet(Item, Junk)
 {
