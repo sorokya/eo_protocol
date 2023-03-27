@@ -2422,6 +2422,8 @@ server_packet(Paperdoll, Reply)
 server_packet(Paperdoll, Remove)
 {
 	struct AvatarChange change
+	short item_id
+	char sub_loc
 	struct ItemCharacterStats stats
 }
 
@@ -2429,6 +2431,9 @@ server_packet(Paperdoll, Remove)
 server_packet(Paperdoll, Agree)
 {
 	struct AvatarChange change
+	short item_id
+	three item_amount_remaining
+	char sub_loc
 	struct ItemCharacterStats stats
 }
 
