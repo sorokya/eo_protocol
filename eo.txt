@@ -355,31 +355,31 @@ enum WarpType : char
 
 enum ItemType : char
 {
-	 1 Static
-	 3 Money
-	 4 Heal
-	 5 Teleport
-	 6 Spell
-	 7 EXPReward
-	 8 StatReward
-	 9 SkillReward
-	10 Key
-	11 Weapon
-	12 Shield
-	13 Armor
-	14 Hat
-	15 Boots
-	16 Gloves
-	17 Accessory
-	18 Belt
-	19 Necklace
-	20 Ring
-	21 Armlet
-	22 Bracer
-	23 Beer
-	24 EffectPotion
-	25 HairDye
-	26 CureCurse
+	 0 Static
+	 2 Money
+	 3 Heal
+	 4 Teleport
+	 5 Spell
+	 6 EXPReward
+	 7 StatReward
+	 8 SkillReward
+     9 Key
+	10 Weapon
+	11 Shield
+	12 Armor
+	13 Hat
+	14 Boots
+	15 Gloves
+	16 Accessory
+	17 Belt
+	18 Necklace
+	19 Ring
+	20 Armlet
+	21 Bracer
+	22 Beer
+	23 EffectPotion
+	24 HairDye
+	25 CureCurse
 }
 
 // ---
