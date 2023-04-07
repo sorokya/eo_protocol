@@ -3709,7 +3709,7 @@ server_packet(Recover, TargetGroup)
 server_packet(Recover, Agree)
 {
 	short player_id
-	short heal_hp
+	int heal_hp
 	char hp_percentage
 }
 
