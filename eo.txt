@@ -3318,7 +3318,7 @@ server_packet(NPC, Spec)
 "Reply to request for information about nearby NPCs"
 server_packet(NPC, Agree)
 {
-	short num_npcs
+	char num_npcs
 	struct NPCMapInfo npcs[num_npcs]
 }
 
