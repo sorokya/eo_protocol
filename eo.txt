@@ -96,11 +96,11 @@ enum PacketAction : byte
 enum AdminLevel : char
 {
 	0 Player
-	1 Guide
-	2 Guardian
-	3 GM
-	4 HGM
-	5 God
+	1 Spy
+	2 LightGuide
+	3 Guardian
+	4 GameMaster
+	5 HighGameMaster
 }
 
 enum Direction : char
@@ -380,6 +380,12 @@ enum ItemType : char
 	23 EffectPotion
 	24 HairDye
 	25 CureCurse
+}
+
+enum PlayerKilledState : char
+{
+	1 Alive
+	2 Dead
 }
 
 // ---
@@ -947,10 +953,10 @@ struct ServerSettings
 	short rescue_map
 	char rescue_x
 	char rescue_y
-	short light_guide_flood_rate
+	short spy_and_light_guide_flood_rate
 	short guardian_flood_rate
-	short gm_flood_rate
-	short hgm_flood_rate
+	short game_master_flood_rate
+	short high_game_master_flood_rate
 }
 
 enum WelcomeReply : short
@@ -1535,13 +1541,13 @@ server_packet(Walk, Reply)
 "Your character has been frozen"
 server_packet(Walk, Close)
 {
-	char = 'f'
+	char = 'S'
 }
 
 "Your character has been unfrozen"
 server_packet(Walk, Open)
 {
-	char = 'u'
+	char = 'S'
 }
 
 
@@ -3400,7 +3406,7 @@ struct NPCUpdatePos
 struct NPCUpdateAttack
 {
 	char npc_index
-	char killed_state
+	PlayerKilledState killed_state
 	Direction direction
 	short player_id
 	three damage
