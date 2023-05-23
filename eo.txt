@@ -582,7 +582,7 @@ client_packet(Init, Init)
 {
 	three challenge
 	char version[3]
-	char = 'p'
+	char protocol
 	prefix_string hdid
 }
 
