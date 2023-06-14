@@ -1754,7 +1754,7 @@ client_packet(Shop, Create)
 "Purchasing an item from a shop"
 client_packet(Shop, Buy)
 {
-	short buy_item_id
+	struct Item buy_item
 	int session_id
 }
 
