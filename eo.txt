@@ -3077,6 +3077,7 @@ client_packet(Spell, Target_Other)
 	SpellTargetType target_type
 	three previous_timestamp
 	short spell_id
+  short victim_id
 	three timestamp
 }
 
@@ -3111,7 +3112,6 @@ server_packet(Spell, Target_Self)
 	// TODO: Represent optionally present data
 	short hp
 	short tp
-	short = 1
 }
 
 "Nearby player hit by a damage spell from a player"
